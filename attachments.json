@@ -1,0 +1,1267 @@
+{
+  "ArMatrix B-Amplifier 10P (L)": {
+    "ammo": 210,
+    "decay": "0.0016",
+    "type": "BLP Amp"
+  },
+  "ArMatrix B-Amplifier 13P (L)": {
+    "ammo": 273,
+    "decay": "0.00208",
+    "type": "BLP Amp"
+  },
+  "ArMatrix B-Amplifier 17P (L)": {
+    "ammo": 357,
+    "decay": "0.00272",
+    "type": "BLP Amp"
+  },
+  "ArMatrix B-Amplifier 20P (L)": {
+    "ammo": 420,
+    "decay": "0.0032",
+    "type": "BLP Amp"
+  },
+  "ArMatrix B-Amplifier 23P (L)": {
+    "ammo": 483,
+    "decay": "0.00368",
+    "type": "BLP Amp"
+  },
+  "ArMatrix B-Amplifier 25P (L)": {
+    "ammo": 525,
+    "decay": "0.004",
+    "type": "BLP Amp"
+  },
+  "ArMatrix B-Amplifier 28P (L)": {
+    "ammo": 588,
+    "decay": "0.00448",
+    "type": "BLP Amp"
+  },
+  "ArMatrix B-Amplifier 33P (L)": {
+    "ammo": 693,
+    "decay": "0.00528",
+    "type": "BLP Amp"
+  },
+  "ArMatrix B-Amplifier 37P (L)": {
+    "ammo": 777,
+    "decay": "0.00592",
+    "type": "BLP Amp"
+  },
+  "ArMatrix B-Amplifier 42P (L)": {
+    "ammo": 882,
+    "decay": "0.00672",
+    "type": "BLP Amp"
+  },
+  "ArMatrix B-Amplifier 45P (L)": {
+    "ammo": 945,
+    "decay": "0.0072",
+    "type": "BLP Amp"
+  },
+  "ArMatrix B-Amplifier 4P (L)": {
+    "ammo": 84,
+    "decay": "0.00064",
+    "type": "BLP Amp"
+  },
+  "ArMatrix B-Amplifier 50P (L)": {
+    "ammo": 1032,
+    "decay": "0.00787",
+    "type": "BLP Amp"
+  },
+  "ArMatrix B-Amplifier 55P (L)": {
+    "ammo": 1032,
+    "decay": "0.00787",
+    "type": "BLP Amp"
+  },
+  "ArMatrix B-Amplifier 60P (L)": {
+    "ammo": 1032,
+    "decay": "0.00787",
+    "type": "BLP Amp"
+  },
+  "ArMatrix B-Amplifier 65P (L)": {
+    "ammo": 1032,
+    "decay": "0.00787",
+    "type": "BLP Amp"
+  },
+  "ArMatrix B-Amplifier 6P (L)": {
+    "ammo": 126,
+    "decay": "0.00096",
+    "type": "BLP Amp"
+  },
+  "ArMatrix B-Amplifier 70P (L)": {
+    "ammo": 1032,
+    "decay": "0.00787",
+    "type": "BLP Amp"
+  },
+  "ArMatrix B-Amplifier 75P (L)": {
+    "ammo": 1032,
+    "decay": "0.00787",
+    "type": "BLP Amp"
+  },
+  "ArMatrix B-Amplifier 8P (L)": {
+    "ammo": 168,
+    "decay": "0.00128",
+    "type": "BLP Amp"
+  },
+  "ArMatrix L-Amplifier 10B (L)": {
+    "ammo": 210,
+    "decay": "0.0016",
+    "type": "Energy Amp"
+  },
+  "ArMatrix L-Amplifier 13B (L)": {
+    "ammo": 273,
+    "decay": "0.00208",
+    "type": "Energy Amp"
+  },
+  "ArMatrix L-Amplifier 17B (L)": {
+    "ammo": 357,
+    "decay": "0.00272",
+    "type": "Energy Amp"
+  },
+  "ArMatrix L-Amplifier 20B (L)": {
+    "ammo": 420,
+    "decay": "0.0032",
+    "type": "Energy Amp"
+  },
+  "ArMatrix L-Amplifier 23B (L)": {
+    "ammo": 483,
+    "decay": "0.00368",
+    "type": "Energy Amp"
+  },
+  "ArMatrix L-Amplifier 25B (L)": {
+    "ammo": 525,
+    "decay": "0.004",
+    "type": "Energy Amp"
+  },
+  "ArMatrix L-Amplifier 28B (L)": {
+    "ammo": 588,
+    "decay": "0.00448",
+    "type": "Energy Amp"
+  },
+  "ArMatrix L-Amplifier 33B (L)": {
+    "ammo": 693,
+    "decay": "0.00528",
+    "type": "Energy Amp"
+  },
+  "ArMatrix L-Amplifier 37B (L)": {
+    "ammo": 777,
+    "decay": "0.00592",
+    "type": "Energy Amp"
+  },
+  "ArMatrix L-Amplifier 42B (L)": {
+    "ammo": 882,
+    "decay": "0.00672",
+    "type": "Energy Amp"
+  },
+  "ArMatrix L-Amplifier 45B (L)": {
+    "ammo": 945,
+    "decay": "0.0072",
+    "type": "Energy Amp"
+  },
+  "ArMatrix L-Amplifier 4B (L)": {
+    "ammo": 84,
+    "decay": "0.00064",
+    "type": "Energy Amp"
+  },
+  "ArMatrix L-Amplifier 50B (L)": {
+    "ammo": 1032,
+    "decay": "0.00787",
+    "type": "Energy Amp"
+  },
+  "ArMatrix L-Amplifier 55B (L)": {
+    "ammo": 1032,
+    "decay": "0.00787",
+    "type": "Energy Amp"
+  },
+  "ArMatrix L-Amplifier 60B (L)": {
+    "ammo": 1032,
+    "decay": "0.00787",
+    "type": "Energy Amp"
+  },
+  "ArMatrix L-Amplifier 65B (L)": {
+    "ammo": 1032,
+    "decay": "0.00787",
+    "type": "Energy Amp"
+  },
+  "ArMatrix L-Amplifier 6B (L)": {
+    "ammo": 126,
+    "decay": "0.00096",
+    "type": "Energy Amp"
+  },
+  "ArMatrix L-Amplifier 70B (L)": {
+    "ammo": 1032,
+    "decay": "0.00787",
+    "type": "Energy Amp"
+  },
+  "ArMatrix L-Amplifier 75B (L)": {
+    "ammo": 1032,
+    "decay": "0.00787",
+    "type": "Energy Amp"
+  },
+  "ArMatrix L-Amplifier 8B (L)": {
+    "ammo": 168,
+    "decay": "0.00128",
+    "type": "Energy Amp"
+  },
+  "Block Rocker BLP Amp Mk I (L)": {
+    "ammo": 0,
+    "decay": "0.03297",
+    "type": "BLP Amp"
+  },
+  "Block Rocker BLP Amp Mk II (L)": {
+    "ammo": 0,
+    "decay": "0.06865",
+    "type": "BLP Amp"
+  },
+  "Boom AAC (L)": {
+    "ammo": 500,
+    "decay": "0.020",
+    "type": "Energy Amp"
+  },
+  "Boom ACC (L)": {
+    "ammo": 100,
+    "decay": "0.01437",
+    "type": "Energy Amp"
+  },
+  "Boom BBC (L)": {
+    "ammo": 1200,
+    "decay": "0.04751",
+    "type": "Energy Amp"
+  },
+  "Boom BCC (L)": {
+    "ammo": 300,
+    "decay": "0.0185",
+    "type": "Energy Amp"
+  },
+  "Boom CCC (L)": {
+    "ammo": 0,
+    "decay": "0.00969",
+    "type": "Energy Amp"
+  },
+  "Bull Tac10 (L)": {
+    "ammo": 0,
+    "decay": "0.00477",
+    "type": "BLP Amp"
+  },
+  "Bull Tac20 (L)": {
+    "ammo": 0,
+    "decay": "0.01195",
+    "type": "BLP Amp"
+  },
+  "Bull Tac25 (L)": {
+    "ammo": 100,
+    "decay": "0.0093",
+    "type": "BLP Amp"
+  },
+  "Bull Tac30 (L)": {
+    "ammo": 200,
+    "decay": "0.01139",
+    "type": "BLP Amp"
+  },
+  "Bull Tac40 (L)": {
+    "ammo": 300,
+    "decay": "0.01095",
+    "type": "BLP Amp"
+  },
+  "Bull Tac50 (L)": {
+    "ammo": 400,
+    "decay": "0.01311",
+    "type": "BLP Amp"
+  },
+  "Bull Tac60 (L)": {
+    "ammo": 400,
+    "decay": "0.01779",
+    "type": "BLP Amp"
+  },
+  "Bull Tac70 (L)": {
+    "ammo": 600,
+    "decay": "0.020",
+    "type": "BLP Amp"
+  },
+  "Bull Tac80 (L)": {
+    "ammo": 700,
+    "decay": "0.025",
+    "type": "BLP Amp"
+  },
+  "Bull TacElite (L)": {
+    "ammo": 900,
+    "decay": "0.03207",
+    "type": "BLP Amp"
+  },
+  "Bust-A-BLP Amp Mk I (L)": {
+    "ammo": 0,
+    "decay": "0.0",
+    "type": "BLP Amp"
+  },
+  "Bust-A-BLP Amp Mk II (L)": {
+    "ammo": 0,
+    "decay": "0.0",
+    "type": "BLP Amp"
+  },
+  "CDF BLP Power Amp 1 (L)": {
+    "ammo": 409,
+    "decay": "0.0022",
+    "type": "BLP Amp"
+  },
+  "CDF BLP Power Amp 2 (L)": {
+    "ammo": 632,
+    "decay": "0.0",
+    "type": "BLP Amp"
+  },
+  "CDF BLP Power Amp 3 (L)": {
+    "ammo": 810,
+    "decay": "0.00466",
+    "type": "BLP Amp"
+  },
+  "CDF BLP Power Amp 4 (L)": {
+    "ammo": 1400,
+    "decay": "0.0099",
+    "type": "BLP Amp"
+  },
+  "CDF Laser Power Amp 1 (L)": {
+    "ammo": 402,
+    "decay": "0.0026",
+    "type": "Energy Amp"
+  },
+  "CDF Laser Power Amp 2 (L)": {
+    "ammo": 530,
+    "decay": "0.0",
+    "type": "Energy Amp"
+  },
+  "CDF Laser Power Amp 3 (L)": {
+    "ammo": 880,
+    "decay": "0.0054",
+    "type": "Energy Amp"
+  },
+  "CDF Laser Power Amp 4 (L)": {
+    "ammo": 1722,
+    "decay": "0.0099",
+    "type": "Energy Amp"
+  },
+  "Chahen BLP AMP V1 (L)": {
+    "ammo": 0,
+    "decay": "0.0066",
+    "type": "BLP Amp"
+  },
+  "Chahen BLP AMP V2 (L)": {
+    "ammo": 68,
+    "decay": "0.0125",
+    "type": "BLP Amp"
+  },
+  "Chahen BLP AMP V3 (L)": {
+    "ammo": 110,
+    "decay": "0.0",
+    "type": "BLP Amp"
+  },
+  "DSEC BLP Amp v1 (L)": {
+    "ammo": 351,
+    "decay": "0.0",
+    "type": "BLP Amp"
+  },
+  "DSEC BLP Amp v2 (L)": {
+    "ammo": 524,
+    "decay": "0.0338",
+    "type": "BLP Amp"
+  },
+  "DSEC Laser Amp v1 (L)": {
+    "ammo": 312,
+    "decay": "0.0102",
+    "type": "Energy Amp"
+  },
+  "DSEC Laser Amp v2 (L)": {
+    "ammo": 483,
+    "decay": "0.03699",
+    "type": "Energy Amp"
+  },
+  "E-Amp 11": {
+    "ammo": 100,
+    "decay": "0.00711",
+    "type": "Energy Amp"
+  },
+  "E-Amp 12": {
+    "ammo": 100,
+    "decay": "0.01556",
+    "type": "Energy Amp"
+  },
+  "E-Amp 13": {
+    "ammo": 100,
+    "decay": "0.0293",
+    "type": "Energy Amp"
+  },
+  "E-Amp 14": {
+    "ammo": 100,
+    "decay": "0.04311",
+    "type": "Energy Amp"
+  },
+  "E-Amp 15": {
+    "ammo": 100,
+    "decay": "0.05633",
+    "type": "Energy Amp"
+  },
+  "Enkidd Black Widow (L)": {
+    "ammo": 200,
+    "decay": "0.016",
+    "type": "BLP Amp"
+  },
+  "Enkidd Brown Recluse (L)": {
+    "ammo": 300,
+    "decay": "0.018",
+    "type": "BLP Amp"
+  },
+  "Enkidd Camel Spider (L)": {
+    "ammo": 100,
+    "decay": "0.014",
+    "type": "BLP Amp"
+  },
+  "Enkidd Red-Back (L)": {
+    "ammo": 0,
+    "decay": "0.012",
+    "type": "BLP Amp"
+  },
+  "Fi/Ra/Co Angst": {
+    "ammo": 200,
+    "decay": "0.01897",
+    "type": "BLP Amp"
+  },
+  "Fi/Ra/Co Beast": {
+    "ammo": 200,
+    "decay": "0.02366",
+    "type": "BLP Amp"
+  },
+  "Fi/Ra/Co Beast, SGA Edition": {
+    "ammo": 200,
+    "decay": "0.02826",
+    "type": "BLP Amp"
+  },
+  "Fi/Ra/Co Cause": {
+    "ammo": 200,
+    "decay": "0.04522",
+    "type": "BLP Amp"
+  },
+  "Fi/Ra/Co Cause, Adjusted": {
+    "ammo": 245,
+    "decay": "0.04102",
+    "type": "BLP Amp"
+  },
+  "Fi/Ra/Co Cause, Improved": {
+    "ammo": 276,
+    "decay": "0.0388",
+    "type": "BLP Amp"
+  },
+  "Fi/Ra/Co Cause, Modified": {
+    "ammo": 292,
+    "decay": "0.0383",
+    "type": "BLP Amp"
+  },
+  "Fi/Ra/Co Dante": {
+    "ammo": 300,
+    "decay": "0.040",
+    "type": "BLP Amp"
+  },
+  "Fi/Ra/Co Evil": {
+    "ammo": 300,
+    "decay": "0.0595",
+    "type": "BLP Amp"
+  },
+  "Fi/Ra/Co Evil, Adjusted": {
+    "ammo": 320,
+    "decay": "0.0595",
+    "type": "BLP Amp"
+  },
+  "Fi/Ra/Co Evil, Improved": {
+    "ammo": 354,
+    "decay": "0.0595",
+    "type": "BLP Amp"
+  },
+  "Fi/Ra/Co Evil, Modified": {
+    "ammo": 386,
+    "decay": "0.0595",
+    "type": "BLP Amp"
+  },
+  "Hotfoot 10 (L)": {
+    "ammo": 190,
+    "decay": "0.00465",
+    "type": "Energy Amp"
+  },
+  "Hotfoot 15 (L)": {
+    "ammo": 325,
+    "decay": "0.0079",
+    "type": "Energy Amp"
+  },
+  "Hotfoot 20 (L)": {
+    "ammo": 465,
+    "decay": "0.01066",
+    "type": "Energy Amp"
+  },
+  "Hotfoot 25 (L)": {
+    "ammo": 565,
+    "decay": "0.01261",
+    "type": "Energy Amp"
+  },
+  "Hotfoot 30 (L)": {
+    "ammo": 700,
+    "decay": "0.01589",
+    "type": "Energy Amp"
+  },
+  "Hotfoot 35 (L)": {
+    "ammo": 820,
+    "decay": "0.01826",
+    "type": "Energy Amp"
+  },
+  "Hotfoot 40 (L)": {
+    "ammo": 915,
+    "decay": "0.02077",
+    "type": "Energy Amp"
+  },
+  "Hotfoot 45 (L)": {
+    "ammo": 1055,
+    "decay": "0.02351",
+    "type": "Energy Amp"
+  },
+  "Hotfoot 5 (L)": {
+    "ammo": 75,
+    "decay": "0.00182",
+    "type": "Energy Amp"
+  },
+  "Hotfoot 50 (L)": {
+    "ammo": 1135,
+    "decay": "0.02509",
+    "type": "Energy Amp"
+  },
+  "Loughlin HyperEdge M-Amp 1 (L)": {
+    "ammo": 0,
+    "decay": "0.00889",
+    "type": "Melee Amp"
+  },
+  "Loughlin HyperEdge M-Amp 2 (L)": {
+    "ammo": 0,
+    "decay": "0.0",
+    "type": "Melee Amp"
+  },
+  "Loughlin Master M-Amp 1 (L)": {
+    "ammo": 0,
+    "decay": "0.0",
+    "type": "Melee Amp"
+  },
+  "Loughlin Master M-Amp 2 (L)": {
+    "ammo": 0,
+    "decay": "0.0",
+    "type": "Melee Amp"
+  },
+  "Loughlin Master M-Amp 4 (L)": {
+    "ammo": 0,
+    "decay": "0.0",
+    "type": "Melee Amp"
+  },
+  "Loughlin NanoRep M-Amp 1 (L)": {
+    "ammo": 0,
+    "decay": "0.0",
+    "type": "Melee Amp"
+  },
+  "Loughlin NanoRep M-Amp 2 (L)": {
+    "ammo": 0,
+    "decay": "0.0",
+    "type": "Melee Amp"
+  },
+  "Low Rider BLP Amp Mk I (L)": {
+    "ammo": 0,
+    "decay": "0.0464",
+    "type": "BLP Amp"
+  },
+  "Low Rider BLP Amp Mk II (L)": {
+    "ammo": 0,
+    "decay": "0.101",
+    "type": "BLP Amp"
+  },
+  "Marshall Laser Amp Mk I (L)": {
+    "ammo": 0,
+    "decay": "0.02331",
+    "type": "Energy Amp"
+  },
+  "Marshall Laser Amp Mk II (L)": {
+    "ammo": 0,
+    "decay": "0.0",
+    "type": "Energy Amp"
+  },
+  "Mayhem B-Amplifier Alpha (L)": {
+    "ammo": 998,
+    "decay": "0.00019",
+    "type": "BLP Amp"
+  },
+  "Mayhem B-Amplifier Beta (L)": {
+    "ammo": 998,
+    "decay": "0.00019",
+    "type": "BLP Amp"
+  },
+  "Mayhem B-Amplifier Delta (L)": {
+    "ammo": 998,
+    "decay": "0.00019",
+    "type": "BLP Amp"
+  },
+  "Mayhem B-Amplifier Gamma (L)": {
+    "ammo": 998,
+    "decay": "0.00019",
+    "type": "BLP Amp"
+  },
+  "Mayhem Kinetic Amplifier 1": {
+    "ammo": 1080,
+    "decay": "0.012",
+    "type": "MF Amp"
+  },
+  "Mayhem Kinetic Amplifier 2": {
+    "ammo": 1260,
+    "decay": "0.014",
+    "type": "MF Amp"
+  },
+  "Mayhem Kinetic Amplifier 3": {
+    "ammo": 1440,
+    "decay": "0.016",
+    "type": "MF Amp"
+  },
+  "Mayhem Kinetic Amplifier 4": {
+    "ammo": 1620,
+    "decay": "0.018",
+    "type": "MF Amp"
+  },
+  "Mayhem Kinetic Amplifier 5": {
+    "ammo": 1800,
+    "decay": "0.020",
+    "type": "MF Amp"
+  },
+  "Mayhem L-Amplifier Alpha (L)": {
+    "ammo": 898,
+    "decay": "0.00018",
+    "type": "Energy Amp"
+  },
+  "Mayhem L-Amplifier Beta (L)": {
+    "ammo": 998,
+    "decay": "0.00019",
+    "type": "Energy Amp"
+  },
+  "Mayhem L-Amplifier Delta (L)": {
+    "ammo": 998,
+    "decay": "0.00019",
+    "type": "Energy Amp"
+  },
+  "Mayhem L-Amplifier Gamma (L)": {
+    "ammo": 998,
+    "decay": "0.00019",
+    "type": "Energy Amp"
+  },
+  "Mayhem M-Matrix Alpha (L)": {
+    "ammo": 0,
+    "decay": "0.00019",
+    "type": "Melee Amp"
+  },
+  "Mayhem M-Matrix Beta (L)": {
+    "ammo": 0,
+    "decay": "0.0",
+    "type": "Melee Amp"
+  },
+  "Mayhem M-Matrix Delta (L)": {
+    "ammo": 0,
+    "decay": "0.0",
+    "type": "Melee Amp"
+  },
+  "Mayhem M-Matrix Gamma (L)": {
+    "ammo": 0,
+    "decay": "0.0",
+    "type": "Melee Amp"
+  },
+  "Mayhem MF-Amplfier Alpha (L)": {
+    "ammo": 898,
+    "decay": "0.00019",
+    "type": "MF Amp"
+  },
+  "Mayhem Trauma Amplifier 1": {
+    "ammo": 0,
+    "decay": "0.120",
+    "type": "Melee Amp"
+  },
+  "Mayhem Trauma Amplifier 2": {
+    "ammo": 0,
+    "decay": "0.140",
+    "type": "Melee Amp"
+  },
+  "Mayhem Trauma Amplifier 3": {
+    "ammo": 0,
+    "decay": "0.160",
+    "type": "Melee Amp"
+  },
+  "Mayhem Trauma Amplifier 4": {
+    "ammo": 0,
+    "decay": "0.180",
+    "type": "Melee Amp"
+  },
+  "Mayhem Trauma Amplifier 5": {
+    "ammo": 0,
+    "decay": "0.200",
+    "type": "Melee Amp"
+  },
+  "Melee Bimodal Amplifier 1 (L)": {
+    "ammo": 0,
+    "decay": "0.0",
+    "type": "Melee Amp"
+  },
+  "Melee Bimodal Amplifier 2 (L)": {
+    "ammo": 0,
+    "decay": "0.0",
+    "type": "Melee Amp"
+  },
+  "Melee Bimodal Amplifier 3 (L)": {
+    "ammo": 0,
+    "decay": "0.0",
+    "type": "Melee Amp"
+  },
+  "Melee Durability Amplifier 1 (L)": {
+    "ammo": 0,
+    "decay": "0.0",
+    "type": "Melee Amp"
+  },
+  "Melee Durability Amplifier 2 (L)": {
+    "ammo": 0,
+    "decay": "0.0",
+    "type": "Melee Amp"
+  },
+  "Melee Durability Amplifier 3 (L)": {
+    "ammo": 0,
+    "decay": "0.0",
+    "type": "Melee Amp"
+  },
+  "Melee Durability Amplifier 92 (L)": {
+    "ammo": 0,
+    "decay": "0.010",
+    "type": "Melee Amp"
+  },
+  "Melee Trauma Amplifier 1": {
+    "ammo": 0,
+    "decay": "0.00889",
+    "type": "Melee Amp"
+  },
+  "Melee Trauma Amplifier 1 (L)": {
+    "ammo": 0,
+    "decay": "0.00889",
+    "type": "Melee Amp"
+  },
+  "Melee Trauma Amplifier 10": {
+    "ammo": 0,
+    "decay": "0.09779",
+    "type": "Melee Amp"
+  },
+  "Melee Trauma Amplifier 10, FEN Edition": {
+    "ammo": 0,
+    "decay": "0.10668",
+    "type": "Melee Amp"
+  },
+  "Melee Trauma Amplifier 2": {
+    "ammo": 0,
+    "decay": "0.01778",
+    "type": "Melee Amp"
+  },
+  "Melee Trauma Amplifier 2 (L)": {
+    "ammo": 0,
+    "decay": "0.01778",
+    "type": "Melee Amp"
+  },
+  "Melee Trauma Amplifier 2, Adjusted": {
+    "ammo": 0,
+    "decay": "0.01768",
+    "type": "Melee Amp"
+  },
+  "Melee Trauma Amplifier 2, FEN Edition": {
+    "ammo": 0,
+    "decay": "0.02667",
+    "type": "Melee Amp"
+  },
+  "Melee Trauma Amplifier 3": {
+    "ammo": 0,
+    "decay": "0.03556",
+    "type": "Melee Amp"
+  },
+  "Melee Trauma Amplifier 3 (L)": {
+    "ammo": 0,
+    "decay": "0.03556",
+    "type": "Melee Amp"
+  },
+  "Melee Trauma Amplifier 4": {
+    "ammo": 0,
+    "decay": "0.04444",
+    "type": "Melee Amp"
+  },
+  "Melee Trauma Amplifier 5": {
+    "ammo": 0,
+    "decay": "0.05334",
+    "type": "Melee Amp"
+  },
+  "Melee Trauma Amplifier 6": {
+    "ammo": 0,
+    "decay": "0.06223",
+    "type": "Melee Amp"
+  },
+  "Melee Trauma Amplifier 6, Improved": {
+    "ammo": 0,
+    "decay": "0.06108",
+    "type": "Melee Amp"
+  },
+  "Melee Trauma Amplifier 7": {
+    "ammo": 0,
+    "decay": "0.07112",
+    "type": "Melee Amp"
+  },
+  "Melee Trauma Amplifier 8": {
+    "ammo": 0,
+    "decay": "0.08001",
+    "type": "Melee Amp"
+  },
+  "Melee Trauma Amplifier 8, Modified": {
+    "ammo": 0,
+    "decay": "0.07766",
+    "type": "Melee Amp"
+  },
+  "Melee Trauma Amplifier 9": {
+    "ammo": 0,
+    "decay": "0.0889",
+    "type": "Melee Amp"
+  },
+  "Mestawy Melee AMP V1 (L)": {
+    "ammo": 0,
+    "decay": "0.0",
+    "type": "Melee Amp"
+  },
+  "Muzwed Energy AMP V1 (L)": {
+    "ammo": 40,
+    "decay": "0.008",
+    "type": "Energy Amp"
+  },
+  "Muzwed Energy AMP V2 (L)": {
+    "ammo": 110,
+    "decay": "0.0",
+    "type": "Energy Amp"
+  },
+  "Muzwed Energy AMP V3 (L)": {
+    "ammo": 166,
+    "decay": "0.0",
+    "type": "Energy Amp"
+  },
+  "NeoPsion Kinetic Amplifier 1": {
+    "ammo": 42,
+    "decay": "0.00042",
+    "type": "MF Amp"
+  },
+  "NeoPsion Kinetic Amplifier 1 (L)": {
+    "ammo": 39,
+    "decay": "0.00045",
+    "type": "MF Amp"
+  },
+  "NeoPsion Kinetic Amplifier 2": {
+    "ammo": 84,
+    "decay": "0.00083",
+    "type": "MF Amp"
+  },
+  "NeoPsion Kinetic Amplifier 2 (L)": {
+    "ammo": 78,
+    "decay": "0.00088",
+    "type": "MF Amp"
+  },
+  "NeoPsion Kinetic Amplifier 3": {
+    "ammo": 169,
+    "decay": "0.0016",
+    "type": "MF Amp"
+  },
+  "NeoPsion Kinetic Amplifier 3 (L)": {
+    "ammo": 157,
+    "decay": "0.00164",
+    "type": "MF Amp"
+  },
+  "NeoPsion Kinetic Amplifier 4": {
+    "ammo": 253,
+    "decay": "0.0023",
+    "type": "MF Amp"
+  },
+  "NeoPsion Kinetic Amplifier 4 (L)": {
+    "ammo": 235,
+    "decay": "0.00245",
+    "type": "MF Amp"
+  },
+  "NeoPsion Kinetic Amplifier 5": {
+    "ammo": 380,
+    "decay": "0.00333",
+    "type": "MF Amp"
+  },
+  "NeoPsion Kinetic Amplifier 5 (L)": {
+    "ammo": 353,
+    "decay": "0.00359",
+    "type": "MF Amp"
+  },
+  "NeoPsion Kinetic Amplifier 6": {
+    "ammo": 570,
+    "decay": "0.0",
+    "type": "MF Amp"
+  },
+  "NeoPsion Kinetic Amplifier 6 (L)": {
+    "ammo": 530,
+    "decay": "0.00567",
+    "type": "MF Amp"
+  },
+  "NeoPsion Kinetic Amplifier 7": {
+    "ammo": 758,
+    "decay": "0.0067",
+    "type": "MF Amp"
+  },
+  "NeoPsion Kinetic Amplifier 7 (L)": {
+    "ammo": 706,
+    "decay": "0.0071",
+    "type": "MF Amp"
+  },
+  "NeoPsion Kinetic Amplifier 7, FEN Edition": {
+    "ammo": 842,
+    "decay": "0.00744",
+    "type": "MF Amp"
+  },
+  "Omegaton A101": {
+    "ammo": 0,
+    "decay": "0.00652",
+    "type": "Energy Amp"
+  },
+  "Omegaton A102": {
+    "ammo": 100,
+    "decay": "0.00521",
+    "type": "Energy Amp"
+  },
+  "Omegaton A103": {
+    "ammo": 100,
+    "decay": "0.01606",
+    "type": "Energy Amp"
+  },
+  "Omegaton A104": {
+    "ammo": 100,
+    "decay": "0.02039",
+    "type": "Energy Amp"
+  },
+  "Omegaton A104, Ancient": {
+    "ammo": 0,
+    "decay": "0.03012",
+    "type": "Energy Amp"
+  },
+  "Omegaton A104, SGA Edition": {
+    "ammo": 100,
+    "decay": "0.02267",
+    "type": "Energy Amp"
+  },
+  "Omegaton A105": {
+    "ammo": 100,
+    "decay": "0.0247",
+    "type": "Energy Amp"
+  },
+  "Omegaton A105 Hypercharged": {
+    "ammo": 228,
+    "decay": "0.0247",
+    "type": "Energy Amp"
+  },
+  "Omegaton A105 Overcharged": {
+    "ammo": 175,
+    "decay": "0.0247",
+    "type": "Energy Amp"
+  },
+  "Omegaton A105, Adjusted": {
+    "ammo": 121,
+    "decay": "0.02476",
+    "type": "Energy Amp"
+  },
+  "Omegaton A105, Improved": {
+    "ammo": 143,
+    "decay": "0.02473",
+    "type": "Energy Amp"
+  },
+  "Omegaton A106": {
+    "ammo": 100,
+    "decay": "0.02902",
+    "type": "Energy Amp"
+  },
+  "Omegaton A201": {
+    "ammo": 100,
+    "decay": "0.00521",
+    "type": "Energy Amp"
+  },
+  "Omegaton A202": {
+    "ammo": 100,
+    "decay": "0.01164",
+    "type": "Energy Amp"
+  },
+  "Omegaton A203": {
+    "ammo": 100,
+    "decay": "0.02243",
+    "type": "Energy Amp"
+  },
+  "Omegaton A204": {
+    "ammo": 100,
+    "decay": "0.0331",
+    "type": "Energy Amp"
+  },
+  "Omegaton A204 Hypercharged": {
+    "ammo": 374,
+    "decay": "0.03315",
+    "type": "Energy Amp"
+  },
+  "Omegaton A204 Overcharged": {
+    "ammo": 242,
+    "decay": "0.0331",
+    "type": "Energy Amp"
+  },
+  "Omegaton A204, Adjusted": {
+    "ammo": 121,
+    "decay": "0.03316",
+    "type": "Energy Amp"
+  },
+  "Omegaton A204, Improved": {
+    "ammo": 143,
+    "decay": "0.03311",
+    "type": "Energy Amp"
+  },
+  "Omegaton A204, SGA Edition": {
+    "ammo": 100,
+    "decay": "0.03793",
+    "type": "Energy Amp"
+  },
+  "Omegaton Amplifier, Modified": {
+    "ammo": 400,
+    "decay": "0.0",
+    "type": "Energy Amp"
+  },
+  "Omegaton B101 (L)": {
+    "ammo": 23,
+    "decay": "0.00002",
+    "type": "Energy Amp"
+  },
+  "RDI Binary Amplifier (L)": {
+    "ammo": 700,
+    "decay": "0.0002",
+    "type": "BLP Amp"
+  },
+  "RDI Energy Amplifier Alpha (L)": {
+    "ammo": 350,
+    "decay": "0.0001",
+    "type": "Energy Amp"
+  },
+  "RDI Energy Amplifier Beta (L)": {
+    "ammo": 700,
+    "decay": "0.0002",
+    "type": "Energy Amp"
+  },
+  "Rage 10 (L)": {
+    "ammo": 165,
+    "decay": "0.00467",
+    "type": "BLP Amp"
+  },
+  "Rage 15 (L)": {
+    "ammo": 300,
+    "decay": "0.00781",
+    "type": "BLP Amp"
+  },
+  "Rage 20": {
+    "ammo": 415,
+    "decay": "0.01063",
+    "type": "BLP Amp"
+  },
+  "Rage 20 (L)": {
+    "ammo": 415,
+    "decay": "0.01063",
+    "type": "BLP Amp"
+  },
+  "Rage 25": {
+    "ammo": 515,
+    "decay": "0.01255",
+    "type": "BLP Amp"
+  },
+  "Rage 25 (L)": {
+    "ammo": 515,
+    "decay": "0.01255",
+    "type": "BLP Amp"
+  },
+  "Rage 30 (L)": {
+    "ammo": 590,
+    "decay": "0.01459",
+    "type": "BLP Amp"
+  },
+  "Rage 35": {
+    "ammo": 650,
+    "decay": "0.01574",
+    "type": "BLP Amp"
+  },
+  "Rage 35 (L)": {
+    "ammo": 650,
+    "decay": "0.01574",
+    "type": "BLP Amp"
+  },
+  "Rage 40 (L)": {
+    "ammo": 725,
+    "decay": "0.01778",
+    "type": "BLP Amp"
+  },
+  "Rage 45 (L)": {
+    "ammo": 860,
+    "decay": "0.02098",
+    "type": "BLP Amp"
+  },
+  "Rage 5 (L)": {
+    "ammo": 70,
+    "decay": "0.00226",
+    "type": "BLP Amp"
+  },
+  "Rage 50 (L)": {
+    "ammo": 935,
+    "decay": "0.02302",
+    "type": "BLP Amp"
+  },
+  "RapMan (L)": {
+    "ammo": 500,
+    "decay": "0.0182",
+    "type": "BLP Amp"
+  },
+  "RapSTAR (L)": {
+    "ammo": 800,
+    "decay": "0.02757",
+    "type": "BLP Amp"
+  },
+  "Rapper (L)": {
+    "ammo": 100,
+    "decay": "0.01437",
+    "type": "BLP Amp"
+  },
+  "Rapper Snapper (L)": {
+    "ammo": 300,
+    "decay": "0.01843",
+    "type": "BLP Amp"
+  },
+  "Road-Monkey Laser Amp Mk I (L)": {
+    "ammo": 0,
+    "decay": "0.00478",
+    "type": "Energy Amp"
+  },
+  "Road-Monkey Laser Amp Mk IV (L)": {
+    "ammo": 0,
+    "decay": "0.030",
+    "type": "Energy Amp"
+  },
+  "Roadie BLP Amp Mk I (L)": {
+    "ammo": 0,
+    "decay": "0.00477",
+    "type": "BLP Amp"
+  },
+  "Roadie BLP Amp Mk II (L)": {
+    "ammo": 0,
+    "decay": "0.01194",
+    "type": "BLP Amp"
+  },
+  "Rookie Laser Amp (L)": {
+    "ammo": 20,
+    "decay": "0.00046",
+    "type": "Energy Amp"
+  },
+  "Shack-A-Lacka Laser Amp Mk I (L)": {
+    "ammo": 0,
+    "decay": "0.065",
+    "type": "Energy Amp"
+  },
+  "Shack-A-Lacka Laser Amp Mk II (L)": {
+    "ammo": 0,
+    "decay": "0.0234",
+    "type": "Energy Amp"
+  },
+  "Shear Pro600 (L)": {
+    "ammo": 600,
+    "decay": "0.01975",
+    "type": "Energy Amp"
+  },
+  "Shear Pro700 (L)": {
+    "ammo": 700,
+    "decay": "0.02451",
+    "type": "Energy Amp"
+  },
+  "Shear Pro900 (L)": {
+    "ammo": 900,
+    "decay": "0.0",
+    "type": "Energy Amp"
+  },
+  "Shear ProM (L)": {
+    "ammo": 1000,
+    "decay": "0.0",
+    "type": "Energy Amp"
+  },
+  "Shear ProMC (L)": {
+    "ammo": 1400,
+    "decay": "0.0",
+    "type": "Energy Amp"
+  },
+  "Shear XR40 (L)": {
+    "ammo": 0,
+    "decay": "0.00478",
+    "type": "Energy Amp"
+  },
+  "Shear XR50 (L)": {
+    "ammo": 0,
+    "decay": "0.012",
+    "type": "Energy Amp"
+  },
+  "Shear XR55 (L)": {
+    "ammo": 100,
+    "decay": "0.00931",
+    "type": "Energy Amp"
+  },
+  "Shear XR60 (L)": {
+    "ammo": 200,
+    "decay": "0.01139",
+    "type": "Energy Amp"
+  },
+  "Shear XR70 (L)": {
+    "ammo": 300,
+    "decay": "0.01093",
+    "type": "Energy Amp"
+  },
+  "Shear XR80 (L)": {
+    "ammo": 400,
+    "decay": "0.01312",
+    "type": "Energy Amp"
+  },
+  "Shear XR90 (L)": {
+    "ammo": 400,
+    "decay": "0.01779",
+    "type": "Energy Amp"
+  },
+  "T-Rap (L)": {
+    "ammo": 0,
+    "decay": "0.00969",
+    "type": "BLP Amp"
+  },
+  "Teenie Weenie Laser Amp Mk I (L)": {
+    "ammo": 0,
+    "decay": "0.0",
+    "type": "Energy Amp"
+  },
+  "Teenie Weenie Laser Amp Mk II (L)": {
+    "ammo": 0,
+    "decay": "0.01615",
+    "type": "Energy Amp"
+  },
+  "Xent Tech Light Amplification Crenshaw (L)": {
+    "ammo": 300,
+    "decay": "0.018",
+    "type": "Energy Amp"
+  },
+  "Xent Tech Light Amplification Sunset (L)": {
+    "ammo": 100,
+    "decay": "0.014",
+    "type": "Energy Amp"
+  },
+  "Xent Tech Light Amplification Vine (L)": {
+    "ammo": 0,
+    "decay": "0.0",
+    "type": "Energy Amp"
+  },
+  "Xent Tech Light Amplification Wilshire (L)": {
+    "ammo": 200,
+    "decay": "0.016",
+    "type": "Energy Amp"
+  },
+  "ZX Sinkadus": {
+    "ammo": 40,
+    "decay": "0.00032",
+    "type": "Energy Amp"
+  }
+}
