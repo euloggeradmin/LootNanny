@@ -13,6 +13,7 @@ from chat import ChatReader
 from config import CONFIG, save_config
 from version import VERSION
 from helpers import resource_path
+from windows.streamer import StreamerWindow
 
 
 MAIN_EVENT_LOOP_TICK = 2.0
@@ -24,6 +25,11 @@ class Window(QWidget):
     def __init__(self):
         super().__init__()
         self.config = CONFIG
+
+        # Other Windows
+        self.streamer_window = None
+        self.streamer_window_btn = QPushButton("Show Streamer UI")
+        self.streamer_window_btn.released.connect(self.on_toggle_streamer_ui)
 
         self.setWindowTitle("Loot Nanny")
         self.resize(600, 320)
@@ -62,6 +68,8 @@ class Window(QWidget):
         statusBar.addWidget(self.logging_toggle_btn)
         statusBar.addWidget(self.logging_pause_btn)
 
+        statusBar.addWidget(self.streamer_window_btn)
+
         self.theme = "dark"
         self.theme_btn = QPushButton("Toggle Theme")
         self.theme_btn.clicked.connect(lambda: self.toggle_stylesheet())
@@ -88,7 +96,7 @@ class Window(QWidget):
 
         self.theme = self.config.get("theme", "dark")
         if self.theme == "light":
-            self.set_stylesheet("light.qss")
+            self.set_stylesheet(self, "light.qss")
             self.theme_btn.setStyleSheet("background-color: #222222; color: white;")
 
     def save_config(self):
@@ -103,6 +111,17 @@ class Window(QWidget):
         }
 
         save_config(config)
+
+    def on_toggle_streamer_ui(self):
+        if self.streamer_window:
+            self.streamer_window.close()
+            self.streamer_window = None
+        else:
+            self.streamer_window = StreamerWindow(self)
+            if self.theme == "light":
+                self.set_stylesheet(self.streamer_window, "light.qss")
+            else:
+                self.set_stylesheet(self.streamer_window, "dark.qss")
 
     def on_toggle_logging(self):
         if self.combat_module.is_logging:
@@ -323,13 +342,13 @@ class Window(QWidget):
         if app is None:
             raise RuntimeError("No Qt Application found.")
 
-        self.set_stylesheet(path)
+        self.set_stylesheet(self, path)
 
-    def set_stylesheet(self, path):
+    def set_stylesheet(self, target, path):
         file = QFile(resource_path(path))
         file.open(QFile.ReadOnly | QFile.Text)
         stream = QTextStream(file)
-        self.setStyleSheet(stream.readAll())
+        target.setStyleSheet(stream.readAll())
 
         self.save_config()
 
@@ -339,7 +358,7 @@ def create_ui():
     app.setStyle('Fusion')
 
     window = Window()
-    window.set_stylesheet("dark.qss")
+    window.set_stylesheet(window, "dark.qss")
     window.show()
 
     timer = QtCore.QTimer()

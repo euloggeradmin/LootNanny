@@ -288,6 +288,9 @@ class CombatModule(BaseModule):
                             t.start()
                         self.active_run.add_global_row(chat_instance)
 
+            if self.app.streamer_window:
+                self.app.streamer_window.set_text_from_module(self)
+
         if self.runs:
             self.update_tables()
 
