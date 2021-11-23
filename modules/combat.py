@@ -310,6 +310,8 @@ class CombatModule(BaseModule):
         }
         :return:
         """
+        if not self.active_run:
+            return
         self.combat_fields["attacks"].setText(str(self.active_run.total_attacks))
         self.combat_fields["damage"].setText("%.2f" % self.active_run.total_damage)
         self.combat_fields["crits"].setText(str(self.active_run.crit_chance))
@@ -328,6 +330,8 @@ class CombatModule(BaseModule):
         }
         :return:
         """
+        if not self.active_run:
+            return
         self.loot_table.clear()
         self.loot_fields["looted_text"].setText(str(self.active_run.loot_instances))
         self.loot_fields["total_cost_text"].setText("%.2f" % self.active_run.total_cost)
@@ -342,12 +346,18 @@ class CombatModule(BaseModule):
         self.runs_table.setData(self.get_runs_data())
 
     def update_skill_table(self):
+        if not self.active_run:
+            return
         self.skill_table.setData(self.active_run.get_skill_table_data())
 
     def update_enhancer_table(self):
+        if not self.active_run:
+            return
         self.enhancer_table.setData(self.active_run.get_enhancer_table_data())
 
     def update_graphs(self):
+        if not self.active_run:
+            return
         self.return_graph.clear()
         self.return_graph.plot(list(map(lambda x: float(x * 100), self.active_run.return_over_time)))
         self.multiplier_graph.clear()

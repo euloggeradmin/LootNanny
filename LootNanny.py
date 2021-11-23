@@ -1,5 +1,6 @@
 from PyQt5.QtWidgets import QStatusBar, QFormLayout, QHeaderView, QTabWidget, QCheckBox, QGridLayout, QComboBox, QLineEdit, QLabel, QApplication, QWidget, QPushButton, QVBoxLayout, QTableWidget, QTableWidgetItem
 from PyQt5 import QtCore
+from PyQt5.QtCore import QFile, QTextStream
 import pyqtgraph as pg
 import traceback
 from datetime import datetime
@@ -11,6 +12,7 @@ from views.configuration import ConfigTab
 from chat import ChatReader
 from config import CONFIG, save_config
 from version import VERSION
+from helpers import resource_path
 
 
 MAIN_EVENT_LOOP_TICK = 2.0
@@ -52,13 +54,20 @@ class Window(QWidget):
         self.logging_toggle_btn.released.connect(self.on_toggle_logging)
 
         self.logging_pause_btn = QPushButton("Pause Logging", enabled=False)
-        self.logging_pause_btn.setStyleSheet("background-color: grey")
+        self.logging_pause_btn.setStyleSheet("background-color: grey; color: white;")
         self.logging_pause_btn.released.connect(self.on_pause_logging)
 
         statusBar.addWidget(QLabel(f"Version: {VERSION}"))
 
         statusBar.addWidget(self.logging_toggle_btn)
         statusBar.addWidget(self.logging_pause_btn)
+
+        self.theme = "dark"
+        self.theme_btn = QPushButton("Toggle Theme")
+        self.theme_btn.clicked.connect(lambda: self.toggle_stylesheet())
+        self.theme_btn.setStyleSheet("background-color: white; color: black;")
+        statusBar.addWidget(self.theme_btn)
+
         layout.addWidget(statusBar)
 
         self.initialize_from_config()
@@ -75,8 +84,12 @@ class Window(QWidget):
         self.combat_module.active_character = self.config.get("name", "")
         self.config_tab.chat_location_text.setText(self.config.get("location", ""))
         self.config_tab.chat_location = self.config.get("location", "")
-
         self.config_tab.recalculateWeaponFields()
+
+        self.theme = self.config.get("theme", "dark")
+        if self.theme == "light":
+            self.set_stylesheet("light.qss")
+            self.theme_btn.setStyleSheet("background-color: #222222; color: white;")
 
     def save_config(self):
         config = {
@@ -85,7 +98,8 @@ class Window(QWidget):
             "damage_enhancers": self.combat_module.damage_enhancers,
             "accuracy_enhancers": self.combat_module.accuracy_enhancers,
             "name": self.combat_module.active_character,
-            "location": self.config_tab.chat_location
+            "location": self.config_tab.chat_location,
+            "theme": self.theme,
         }
 
         save_config(config)
@@ -100,7 +114,7 @@ class Window(QWidget):
             self.logging_toggle_btn.setText("Start Logging")
             self.logging_pause_btn.setEnabled(False)
             self.logging_pause_btn.setText("Pause Logging")
-            self.logging_pause_btn.setStyleSheet("background-color: grey")
+            self.logging_pause_btn.setStyleSheet("background-color: grey: color; white;")
         else:
             self.combat_module.is_logging = True
             self.combat_module.is_paused = False
@@ -109,7 +123,6 @@ class Window(QWidget):
             self.logging_pause_btn.setEnabled(True)
             self.logging_pause_btn.setText("Pause Logging")
             self.logging_pause_btn.setStyleSheet("background-color: green")
-
 
     def on_pause_logging(self):
         if self.combat_module.is_paused:
@@ -288,11 +301,45 @@ class Window(QWidget):
         combatTab.setLayout(layout)
         return combatTab
 
+    def toggle_stylesheet(self):
+        '''
+        Toggle the stylesheet to use the desired path in the Qt resource
+        system (prefixed by `:/`) or generically (a path to a file on
+        system).
+
+        :path:      A full path to a resource or file on system
+        '''
+        if self.theme == "light":
+            self.theme_btn.setStyleSheet("background-color: #222222; color: white;")
+            self.theme = "dark"
+            path = "dark.qss"
+        else:
+            self.theme_btn.setStyleSheet("background-color: white; color: black;")
+            self.theme = "light"
+            path = "light.qss"
+
+        # get the QApplication instance,  or crash if not set
+        app = QApplication.instance()
+        if app is None:
+            raise RuntimeError("No Qt Application found.")
+
+        self.set_stylesheet(path)
+
+    def set_stylesheet(self, path):
+        file = QFile(resource_path(path))
+        file.open(QFile.ReadOnly | QFile.Text)
+        stream = QTextStream(file)
+        self.setStyleSheet(stream.readAll())
+
+        self.save_config()
+
 
 def create_ui():
     app = QApplication([])
     app.setStyle('Fusion')
+
     window = Window()
+    window.set_stylesheet("dark.qss")
     window.show()
 
     timer = QtCore.QTimer()
