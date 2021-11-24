@@ -6,6 +6,7 @@ from version import VERSION
 
 block_cipher = None
 
+PYTHON_VERSION = "_".join(map(str, sys.version_info[:3))
 
 a = Analysis(['LootNanny.py'],
              pathex=[],
@@ -34,7 +35,7 @@ exe = EXE(pyz,
           a.zipfiles,
           a.datas,  
           [],
-          name=f'LootNanny-{VERSION}',
+          name=f'LootNanny-{VERSION}-p{PYTHON_VERSION}',
           debug=False,
           bootloader_ignore_signals=False,
           strip=False,
