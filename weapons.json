@@ -12094,6 +12094,11 @@
     "decay": "0.19603",
     "type": "Melee"
   },
+  "RIP M6600, Modified": {
+    "ammo": 2000,
+    "decay": "0.03914",
+    "type": "Pistol"
+  },
   "RIP M770 (L)": {
     "ammo": 1850,
     "decay": "0.0166",
