@@ -6,7 +6,7 @@ from version import VERSION
 
 block_cipher = None
 
-PYTHON_VERSION = "_".join(map(str, sys.version_info[:3))
+PYTHON_VERSION = "_".join(map(str, sys.version_info[:3]))
 
 a = Analysis(['LootNanny.py'],
              pathex=[],
