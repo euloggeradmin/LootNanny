@@ -125,6 +125,7 @@ class ConfigTab(QWidget):
 
     def onEnhancersChanged(self):
         self.app.combat_module.damage_enhancers = min(10, int(self.damage_enhancers.text()))
+        self.damage_enhancers.setText(str(self.app.combat_module.damage_enhancers))
         self.recalculateWeaponFields()
 
     def onNameChanged(self):

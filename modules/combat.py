@@ -4,7 +4,6 @@ import time
 from typing import List
 from decimal import Decimal
 import threading
-import pyautogui
 import os
 import json
 
@@ -12,9 +11,25 @@ import json
 from modules.base import BaseModule
 from chat import BaseChatRow, CombatRow, LootInstance, SkillRow, EnhancerBreakages, HealRow, GlobalInstance
 from helpers import dt_to_ts, ts_to_dt, format_filename
+from ocr import screenshot_window
 
 
 SAVE_FILENAME = format_filename("runs.json")
+
+
+def take_screenshot(delay_ms, directory, glob: GlobalInstance):
+    """
+    :param glob:
+    :return:
+    """
+    time.sleep(delay_ms / 1000.0)
+    im, _, _ = screenshot_window()
+
+    ts = time.mktime(glob.time.timetuple())
+    screenshot_name = f"{glob.creature}_{glob.value}_{ts}.png"
+    screenshot_fullpath = os.path.join(os.path.expanduser(directory), screenshot_name)
+    print(screenshot_fullpath)
+    im.save(screenshot_fullpath)
 
 
 class HuntingTrip(object):
@@ -28,6 +43,7 @@ class HuntingTrip(object):
         self.tt_return = 0
         self.globals = 0
         self.hofs = 0
+        self.total_cost = 0
 
         self.last_loot_instance = None
         self.loot_instances = 0
@@ -63,6 +79,7 @@ class HuntingTrip(object):
             },
             "summary": {
                 "tt_return": str(self.tt_return),
+                "total_cost": str(self.total_cost),
                 "globals": self.globals,
                 "hofs": self.hofs,
                 "loots": self.loot_instances,
@@ -96,6 +113,12 @@ class HuntingTrip(object):
         inst.hofs = seralized["summary"]["hofs"]
         inst.loot_instances = seralized["summary"]["loots"]
         inst.adjusted_cost = Decimal(seralized["summary"]["adj_cost"])
+        if "total_cost" not in seralized["summary"]:
+            # Fix for case where total_cost wont be present in serialized runs
+            total_cost = Decimal(seralized["config"]["cps"]) * int(seralized["combat"]["attacks"])
+            inst.total_cost = total_cost
+        else:
+            inst.total_cost = Decimal(seralized["summary"].get("total_cost", "0.0"))
 
         # combat
         inst.total_attacks = seralized["combat"]["attacks"]
@@ -147,6 +170,7 @@ class HuntingTrip(object):
         if row.miss:
             self.total_misses += 1
         self.loot_instance_cost += self.cost_per_shot
+        self.total_cost += self.cost_per_shot
 
     def add_loot_instance_chat_row(self, row: LootInstance):
         ts = time.mktime(row.time.timetuple()) // 2
@@ -189,10 +213,6 @@ class HuntingTrip(object):
         if self.total_attacks == 0:
             return "0.00%"
         return "%.2f" % (self.total_crits / float(self.total_attacks) * 100) + "%"
-
-    @property
-    def total_cost(self):
-        return self.cost_per_shot * self.total_attacks
 
     @property
     def dpp(self):
@@ -284,7 +304,10 @@ class CombatModule(BaseModule):
                 elif isinstance(chat_instance, GlobalInstance):
                     if chat_instance.name.strip() == self.active_character.strip():
                         if self.app.config_tab.screenshots_enabled:
-                            t = threading.Thread(self.take_screenshot, args=(chat_instance, ))
+                            t = threading.Thread(target=take_screenshot, args=(
+                                self.app.config_tab.screenshot_delay_ms,
+                                self.app.config_tab.screenshot_directory,
+                                chat_instance, ))
                             t.start()
                         self.active_run.add_global_row(chat_instance)
 
@@ -385,20 +408,6 @@ class CombatModule(BaseModule):
     def create_new_run(self):
         self.active_run = HuntingTrip(datetime.now(), Decimal(self.ammo_burn) / Decimal(10000) + self.decay)
         self.runs.append(self.active_run)
-
-    def take_screenshot(self, glob: GlobalInstance):
-        """
-        :param glob:
-        :return:
-        """
-        time.sleep(self.app.config_tab.screenshot_delay_ms / 1000.0)
-        im = pyautogui.screenshot()
-
-        ts = time.mktime(glob.time.timetuple())
-        screenshot_name = f"{glob.creature}_{glob.value}_{ts}.png"
-        screenshot_fullpath = os.path.join(os.path.expanduser(self.app.config_tab.screenshot_directory), screenshot_name)
-        print(screenshot_fullpath)
-        im.save(screenshot_fullpath)
 
     def save_runs(self):
         all_runs = []

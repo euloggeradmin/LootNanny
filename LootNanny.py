@@ -16,7 +16,7 @@ from helpers import resource_path
 from windows.streamer import StreamerWindow
 
 
-MAIN_EVENT_LOOP_TICK = 2.0
+MAIN_EVENT_LOOP_TICK = 0.1
 TICK_COUNTER = 0
 
 

@@ -1,6 +1,7 @@
 import tailer
 import enum
 from datetime import datetime
+from collections import namedtuple
 import re
 import time
 import win_unicode_console
@@ -85,6 +86,24 @@ class GlobalInstance(BaseChatRow):
         self.hof = hof
         self.location = location
 
+LOG_LINE_REGEX = re.compile(
+    r"([\d\-]+ [\d:]+) \[(\w+)\] \[(.*)\] (.*)"
+)
+
+LogLine = namedtuple("LogLine", ["time", "channel", "speaker", "msg"])
+
+
+def parse_log_line(line: str) -> LogLine:
+    """
+    Parses a raw string log line and returns an exploded LogLine for easier manipulation
+    :param line: The line to process
+    :return: LogLine
+    """
+    matched = LOG_LINE_REGEX.match(line)
+    if not matched:
+        return LogLine("", "", "", "")
+    return LogLine(*matched.groups())
+
 
 REGEXES = {
     re.compile("Critical hit - Additional damage! You inflicted (\d+\.\d+) points of damage"): (ChatType.DAMAGE, CombatRow, {"critical": True}),
@@ -131,27 +150,28 @@ class ChatReader(object):
     def readlines(self):
         try:
             for line in self.fd:
-                if '[System]' in line:
+                log_line = parse_log_line(line)
+                if log_line.channel == "System":
                     matched = False
                     for rx in REGEXES:
-                        match = rx.search(line)
+                        match = rx.search(log_line.msg)
                         if match:
                             chat_type, chat_cls, kwargs = REGEXES[rx]
                             chat_instance: BaseChatRow = chat_cls(*match.groups(), **kwargs)
-                            chat_instance.time = datetime.strptime(line[:19], "%Y-%m-%d %H:%M:%S")
+                            chat_instance.time = datetime.strptime(log_line.time, "%Y-%m-%d %H:%M:%S")
                             self.lines.append(chat_instance)
                             matched = True
                             break
                     if not matched:
-                        pass
-                elif '[Globals]' in line:
+                        print([log_line.msg])
+                elif log_line.channel == "Globals":
                     matched = False
                     for rx in GLOBAL_REGEXES:
-                        match = rx.search(line)
+                        match = rx.search(log_line.msg)
                         if match:
                             chat_type, chat_cls, kwargs = GLOBAL_REGEXES[rx]
                             chat_instance: GlobalInstance = chat_cls(*match.groups(), **kwargs)
-                            chat_instance.time = datetime.strptime(line[:19], "%Y-%m-%d %H:%M:%S")
+                            chat_instance.time = datetime.strptime(log_line.time, "%Y-%m-%d %H:%M:%S")
                             self.lines.append(chat_instance)
                             matched = True
                             break

@@ -13,12 +13,13 @@ class StreamerWindow(QWidget):
 
         # this will hide the title bar
         self.setWindowFlag(Qt.FramelessWindowHint)
+        self.setWindowFlag(Qt.WindowStaysOnTopHint)
 
         # set the title
         self.setWindowTitle("Streamer Window")
 
         # setting  the geometry of window
-        self.setGeometry(100, 100, 400, 130)
+        self.setGeometry(100, 100, 340, 100)
 
         self.create_widgets()
         self.set_text_from_data(0, 0.0, 0.0)
@@ -60,9 +61,8 @@ class StreamerWindow(QWidget):
         )
 
     def set_text_from_data(self, loots, cost, returns):
-        print(loots, cost, returns)
-        self.kills.setText(f"Total  Kills: {loots:,}")
-        self.spend.setText(f"Total  Spend: {cost:.2f}")
+        self.kills.setText(f"Total Kills: {loots:,}")
+        self.spend.setText(f"Total Spend: {cost:.2f}")
         self.returns.setText(f"Total Return: {returns:.2f}")
         if cost > 0:
             self.perc.setText("%.2f" % (Decimal(returns) / Decimal(cost) * Decimal(100.0)) + "%")

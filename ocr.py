@@ -1,5 +1,6 @@
 from typing import List
 import pyautogui
+import pygetwindow
 from PIL import Image
 from pytesseract import image_to_string, pytesseract
 import numpy as np
@@ -13,13 +14,28 @@ LOOT_RE = "([a-zA-Z\(\) ]+) [\(\{\[](\d+[\.\,]\d+) PED[\)\]\}]"
 pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
 
-def screenshot():
+def screenshot_window():
+    window_name = None
+
+    for window_name in pygetwindow.getAllTitles():
+        if window_name.startswith("Entropia Universe Client"):
+            found_window = window_name
+            break
+
+    if not window_name:
+        return None, 0, 0
+
+    window = pygetwindow.getWindowsWithTitle(window_name)[0]
+    window.activate()
+
     im = pyautogui.screenshot()
 
-    width, height = im.size
+    top_left = window.topleft
+    width = window.width
+    height = window.height
 
-
-    return im
+    im1 = im.crop((top_left.x, top_left.y, top_left.x + width, top_left.y + height))
+    return im1, width, height
 
 
 def change_contrast(img, level):
@@ -34,7 +50,7 @@ def change_contrast(img, level):
 def get_loot_instances_from_screen():
     loots = []
 
-    img = screenshot()
+    img = screenshot_window()
 
     img = img.convert('LA')
     data = np.array(img)
