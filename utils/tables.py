@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QFormLayout, QHeaderView, QTabWidget, QCheckBox, QGridLayout, QComboBox, QLineEdit, QLabel, QApplication, QWidget, QPushButton, QVBoxLayout, QTableWidget, QTableWidgetItem
+from PyQt5.QtWidgets import QAbstractItemView, QFormLayout, QHeaderView, QTabWidget, QCheckBox, QGridLayout, QComboBox, QLineEdit, QLabel, QApplication, QWidget, QPushButton, QVBoxLayout, QTableWidget, QTableWidgetItem
 from PyQt5 import QtCore
 
 
@@ -39,6 +39,8 @@ class RunsView(BaseTableView):
         header.setSectionResizeMode(4, QHeaderView.ResizeToContents)
         header.setSectionResizeMode(5, QHeaderView.ResizeToContents)
         header.setSectionResizeMode(6, QHeaderView.ResizeToContents)
+
+        self.setSelectionBehavior(QAbstractItemView.SelectRows)
 
 
 class LootTableView(BaseTableView):

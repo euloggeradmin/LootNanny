@@ -217,7 +217,8 @@ class HuntingTrip(object):
     @property
     def dpp(self):
         if self.total_cost > Decimal(0):
-            return str(Decimal(self.total_damage) / Decimal(self.total_cost * 100))
+            return Decimal(self.total_damage) / Decimal(self.total_cost * 100)
+        return Decimal(0.0)
 
     def get_skill_table_data(self):
         d = {"Skill": [], "Value": []}
@@ -225,6 +226,9 @@ class HuntingTrip(object):
             d["Skill"].append(k)
             d["Value"].append("%.4f" % v)
         return d
+
+    def get_total_skill_gain(self):
+        return sum(self.skillgains.values())
 
     def get_enhancer_table_data(self):
         d = {"Enhancer": [], "Breaks": []}
@@ -342,7 +346,7 @@ class CombatModule(BaseModule):
         self.combat_fields["damage"].setText("%.2f" % self.active_run.total_damage)
         self.combat_fields["crits"].setText(str(self.active_run.crit_chance))
         self.combat_fields["misses"].setText(str(self.active_run.miss_chance))
-        self.combat_fields["dpp"].setText(str(self.active_run.dpp))
+        self.combat_fields["dpp"].setText("%.4f" % self.active_run.dpp)
 
     def update_loot_table(self):
         """
@@ -368,13 +372,16 @@ class CombatModule(BaseModule):
         self.loot_fields["hofs"].setText(str(self.active_run.hofs))
 
         self.loot_table.setData(self.active_run.get_item_loot_table_data())
+        self.update_runs_table()
 
+    def update_runs_table(self):
         self.runs_table.setData(self.get_runs_data())
 
     def update_skill_table(self):
         if not self.active_run:
             return
         self.skill_table.setData(self.active_run.get_skill_table_data())
+        self.app.total_skills_text.setText(f"{self.active_run.get_total_skill_gain():.4f}")
 
     def update_enhancer_table(self):
         if not self.active_run:

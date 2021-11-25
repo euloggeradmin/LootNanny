@@ -1,8 +1,23 @@
 from PyQt5.QtWidgets import QMainWindow, QLabel, QHBoxLayout, QVBoxLayout, QWidget
 from PyQt5.QtGui import *
 from PyQt5.QtCore import Qt, QPoint
+from enum import Enum
+from typing import Dict, List
+from collections import defaultdict
+
 import sys
 from decimal import Decimal
+
+
+class LayoutValue(str, Enum):
+    PERCENTAGE_RETURN = "PERCENTAGE_RETURN"
+    TOTAL_LOOTS = "TOTAL_LOOTS"
+    TOTAL_SPEND = "TOTAL_SPEND"
+    TOTAL_RETURN = "TOTAL_RETURN"
+    PROFIT = "PROFIT"
+    DPP = "DPP"
+    GLOBALS = "GLOBALS"
+    HOFS = "HOFS"
 
 
 class StreamerWindow(QWidget):
@@ -21,53 +36,91 @@ class StreamerWindow(QWidget):
         # setting  the geometry of window
         self.setGeometry(100, 100, 340, 100)
 
-        self.create_widgets()
-        self.set_text_from_data(0, 0.0, 0.0)
+        self.widget_mappings: Dict[LayoutValue, QWidget] = defaultdict(lambda: [])
+        self.layout = self.create_widgets()
+        self.set_text_from_data(0, 0.0, 0.0, 0, 0, 0.0)
+        self.resize_to_contents()
 
         # show all the widgets
         self.oldPos = self.pos()
+
         self.show()
 
-    def create_widgets(self):
+    def resize_to_contents(self):
+         self.setFixedSize(self.layout.sizeHint())
 
+    def create_widgets(self):
+        """
+        Layout is specified as json:
+
+        layout = {
+            "layout": [
+                [
+                    ["{}%", "PERCENTAGE_RETURN", "font-size: 20pt;]
+                ],
+                [
+                    ["Total Loots: {}", "TOTAL_LOOTS"],
+                    ["Total Spend: {} PED", "TOTAL_SPEND"],
+                    ["Total Return: {} PED", "TOTAL_RETURN"]
+                ]
+            ],
+            "style": "color: red; font-size: 12pt;"
+        }
+        """
         layout = QHBoxLayout()
         self.setLayout(layout)
 
-        self.perc = QLabel()
-        self.perc.setStyleSheet("font-size: 20pt;")
-        layout.addWidget(self.perc)
+        for column in self.app.config_tab.streamer_window_layout["layout"]:
 
-        v_layout = QVBoxLayout()
-        self.kills = QLabel()
-        self.kills.setStyleSheet("font-size: 12pt;")
-        v_layout.addWidget(self.kills)
+            # Create a new column layout and add it to the horizontal box
+            column_layout = QVBoxLayout()
+            layout.addLayout(column_layout)
 
-        self.spend = QLabel()
-        self.spend.setStyleSheet("font-size: 12pt;")
-        v_layout.addWidget(self.spend)
+            for column_fields in column:
+                if len(column_fields) == 3:
+                    this_style = column_fields[2]
+                else:
+                    this_style = ""
+                value_type = LayoutValue(column_fields[1])
+                format_str = column_fields[0]
 
-        self.returns = QLabel()
-        self.returns.setStyleSheet("font-size: 12pt;")
-        v_layout.addWidget(self.returns)
+                this_label = QLabel()
+                this_label.setStyleSheet(self.app.config_tab.streamer_window_layout.get("style", "") + this_style)
+                column_layout.addWidget(this_label)
 
-        layout.addLayout(v_layout)
+                self.widget_mappings[value_type].append((format_str, this_label))
+
         layout.addStretch()
+        return layout
 
-    def set_text_from_module(self, combat_module):
+    def set_text_from_module(self, combat_module: "CombatModule"):
         self.set_text_from_data(
             combat_module.active_run.loot_instances,
             combat_module.active_run.total_cost,
-            combat_module.active_run.tt_return
+            combat_module.active_run.tt_return,
+            combat_module.active_run.hofs,
+            combat_module.active_run.globals,
+            combat_module.active_run.dpp
         )
 
-    def set_text_from_data(self, loots, cost, returns):
-        self.kills.setText(f"Total Kills: {loots:,}")
-        self.spend.setText(f"Total Spend: {cost:.2f}")
-        self.returns.setText(f"Total Return: {returns:.2f}")
+    def set_text_from_data(self, loots, cost, returns, hofs, globals, dpp):
+        data = {
+            LayoutValue.DPP: f"{dpp:.4f}",
+            LayoutValue.GLOBALS: f"{globals:,}",
+            LayoutValue.HOFS: f"{hofs:,}",
+            LayoutValue.TOTAL_LOOTS: f"{loots:,}",
+            LayoutValue.TOTAL_RETURN: f"{returns:.2f}",
+            LayoutValue.TOTAL_SPEND: f"{cost:.2f}",
+            LayoutValue.PROFIT: f"{returns - cost:.2f}",
+        }
         if cost > 0:
-            self.perc.setText("%.2f" % (Decimal(returns) / Decimal(cost) * Decimal(100.0)) + "%")
+            data[LayoutValue.PERCENTAGE_RETURN] = "%.2f" % (Decimal(returns) / Decimal(cost) * Decimal(100.0)) + "%"
         else:
-            self.perc.setText("0.00%")
+            data[LayoutValue.PERCENTAGE_RETURN] = "0.00"
+
+        for data_type, widget_data in self.widget_mappings.items():
+            for format_str, widget in widget_data:
+                widget.setText(format_str.format(data[data_type]))
 
     def center(self):
         qr = self.frameGeometry()

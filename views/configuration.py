@@ -1,7 +1,8 @@
 from decimal import Decimal
 import os
+import json
 
-from PyQt5.QtWidgets import QFileDialog, QFormLayout, QHeaderView, QTabWidget, QCheckBox, QGridLayout, QComboBox, QLineEdit, QLabel, QApplication, QWidget, QPushButton, QVBoxLayout, QTableWidget, QTableWidgetItem
+from PyQt5.QtWidgets import QFileDialog, QTextEdit, QFormLayout, QHeaderView, QTabWidget, QCheckBox, QGridLayout, QComboBox, QLineEdit, QLabel, QApplication, QWidget, QPushButton, QVBoxLayout, QTableWidget, QTableWidgetItem
 
 from data.weapons import ALL_WEAPONS
 from data.attachments import ALL_ATTACHMENTS
@@ -78,6 +79,25 @@ class ConfigTab(QWidget):
         self.screenshots_delay = QLineEdit(text="500")
         form_inputs.addRow("Screenshot Delay (ms):", self.screenshots_delay)
 
+        self.streamer_window_layout = {
+            "layout": [
+                [
+                    ["{}%", "PERCENTAGE_RETURN", "font-size: 20pt;"]
+                ],
+                [
+                    ["Total Loots: {}", "TOTAL_LOOTS"],
+                    ["Total Spend: {} PED", "TOTAL_SPEND"],
+                    ["Total Return: {} PED", "TOTAL_RETURN"]
+                ]
+            ],
+            "style": "font-size: 12pt;"
+        }
+        self.streamer_window_layout_text = QTextEdit()
+        self.streamer_window_layout_text.setText(json.dumps(self.streamer_window_layout, indent=2))
+        self.streamer_window_layout_text.textChanged.connect(self.set_new_streamer_layout)
+
+        form_inputs.addRow("Streamer Window Layout:", self.streamer_window_layout_text)
+
         # Set Layout
         layout.addLayout(form_inputs)
 
@@ -85,6 +105,14 @@ class ConfigTab(QWidget):
 
         if not os.path.exists(os.path.expanduser(self.screenshot_directory)):
             os.makedirs(os.path.expanduser(self.screenshot_directory))
+
+    def set_new_streamer_layout(self):
+        try:
+            self.streamer_window_layout = json.loads(self.streamer_window_layout_text.toPlainText())
+            self.streamer_window_layout_text.setStyleSheet("color: white;" if self.app.theme == "dark" else "color: black;")
+        except:
+            self.streamer_window_layout_text.setStyleSheet("color: red;")
+        self.app.save_config()
 
     def open_files(self):
         path = QFileDialog.getOpenFileName(self, 'Open a file', '', 'All Files (*.*)')
@@ -100,7 +128,7 @@ class ConfigTab(QWidget):
             ammo += amp["ammo"]
             decay += amp["decay"]
         self.ammo_burn_text.setText(str(int(ammo)))
-        self.weapon_decay_text.setText(str(decay))
+        self.weapon_decay_text.setText("%.6f" % decay)
 
         self.app.combat_module.decay = decay
         self.app.combat_module.ammo_burn = ammo
@@ -134,5 +162,3 @@ class ConfigTab(QWidget):
 
     def onChatLocationChanged(self):
         self.chat_location = self.chat_location_text.text()
-        print(self.chat_location)
-

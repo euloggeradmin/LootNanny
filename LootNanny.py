@@ -4,7 +4,8 @@ from PyQt5.QtCore import QFile, QTextStream
 import pyqtgraph as pg
 import traceback
 from datetime import datetime
-
+from copy import copy
+import json
 
 from utils.tables import *
 from modules.combat import CombatModule
@@ -55,7 +56,7 @@ class Window(QWidget):
 
         statusBar = QStatusBar()
 
-        self.logging_toggle_btn = QPushButton("Start Logging")
+        self.logging_toggle_btn = QPushButton("Start Run")
         self.logging_toggle_btn.setStyleSheet("background-color: green")
         self.logging_toggle_btn.released.connect(self.on_toggle_logging)
 
@@ -94,6 +95,9 @@ class Window(QWidget):
         self.config_tab.chat_location = self.config.get("location", "")
         self.config_tab.recalculateWeaponFields()
 
+        if self.config.get("streamer_layout", {}):
+            self.config_tab.streamer_window_layout = self.config.get("streamer_layout", {})
+
         self.theme = self.config.get("theme", "dark")
         if self.theme == "light":
             self.set_stylesheet(self, "light.qss")
@@ -108,6 +112,7 @@ class Window(QWidget):
             "name": self.combat_module.active_character,
             "location": self.config_tab.chat_location,
             "theme": self.theme,
+            "streamer_layout": self.config_tab.streamer_window_layout
         }
 
         save_config(config)
@@ -130,7 +135,7 @@ class Window(QWidget):
             self.combat_module.active_run.time_end = datetime.now()
             self.combat_module.active_run = None
             self.logging_toggle_btn.setStyleSheet("background-color: green")
-            self.logging_toggle_btn.setText("Start Logging")
+            self.logging_toggle_btn.setText("Start Run")
             self.logging_pause_btn.setEnabled(False)
             self.logging_pause_btn.setText("Pause Logging")
             self.logging_pause_btn.setStyleSheet("background-color: grey: color; white;")
@@ -138,7 +143,7 @@ class Window(QWidget):
             self.combat_module.is_logging = True
             self.combat_module.is_paused = False
             self.logging_toggle_btn.setStyleSheet("background-color: red")
-            self.logging_toggle_btn.setText("Stop Logging")
+            self.logging_toggle_btn.setText("End Run")
             self.logging_pause_btn.setEnabled(True)
             self.logging_pause_btn.setText("Pause Logging")
             self.logging_pause_btn.setStyleSheet("background-color: green")
@@ -173,6 +178,9 @@ class Window(QWidget):
 
             self.combat_module.tick(all_lines_this_tick)
 
+            if self.streamer_window:
+                self.streamer_window.resize_to_contents()
+
         except Exception as e:
             traceback.print_exc()
             print(e)
@@ -206,11 +214,18 @@ class Window(QWidget):
         form_inputs.addRow("HOFs:", hofs)
 
         table = LootTableView({"Item": [], "Value": [], "Count": []}, 30, 3)
-        runs = RunsView({"Start": [], "End": [], "Spend": [], "Enhancers": [],
+        self.runs = RunsView({"Start": [], "End": [], "Spend": [], "Enhancers": [],
                          "Extra Spend": [], "Return": [], "%": []}, 15, 7)
+        self.runs.itemClicked.connect(self.onLootTableClicked)
+
+        # Run Management buttons
+        self.delete_run_button = QPushButton("Delete Run", enabled=False)
+        self.delete_run_button.setStyleSheet("background-color: #f06c6c; color: black;")
+        self.delete_run_button.released.connect(self.delete_runs)
+        self.delete_run_button.hide()
 
         self.combat_module.loot_table = table
-        self.combat_module.runs_table = runs
+        self.combat_module.runs_table = self.runs
         self.combat_module.loot_fields = {
             "looted_text": looted_text,
             "total_cost_text": total_cost_text,
@@ -222,11 +237,43 @@ class Window(QWidget):
 
         # eulogger.table_view = table
         layout.addLayout(form_inputs)
-        layout.addWidget(runs)
+        layout.addWidget(self.runs)
+        layout.addWidget(self.delete_run_button)
         layout.addWidget(table)
 
         generalTab.setLayout(layout)
         return generalTab
+
+    def onLootTableClicked(self):
+        self.delete_run_button.show()
+
+        indexes = self.runs.selectionModel().selectedRows()
+        if not indexes:
+            return
+        if len(indexes) > 1:
+            self.delete_run_button.setText("Delete Runs")
+        else:
+            self.delete_run_button.setText("Delete Run")
+
+        self.delete_run_button.setEnabled(True)
+
+        self.runs_rows_to_delete = [len(self.combat_module.runs) - 1 - i.row() for i in indexes]
+
+    def delete_runs(self):
+        copy_runs = []
+        for i, run in enumerate(self.combat_module.runs):
+            if i in self.runs_rows_to_delete:
+                continue
+            copy_runs.append(run)
+        self.runs_rows_to_delete = []
+        self.delete_run_button.setEnabled(False)
+        self.delete_run_button.hide()
+        self.runs.clearSelection()
+        self.combat_module.runs = copy_runs
+        if self.combat_module.active_run not in copy_runs:
+            self.combat_module.active_run = None
+        self.runs.clear()
+        self.combat_module.update_runs_table()
 
     def analysisTabUI(self):
         analysisTab = QWidget()
@@ -260,13 +307,8 @@ class Window(QWidget):
         form_inputs = QFormLayout()
         # Add widgets to the layout
 
-        total_skills = QLineEdit(enabled=False)
-        form_inputs.addRow("Total Skill Gain:", total_skills)
-        # eulogger.total_skills = total_skills
-
-        total_skills_mu = QLineEdit(enabled=False)
-        form_inputs.addRow("Total Skill Gain (MU):", total_skills_mu)
-        # eulogger.total_skills_mu = total_skills_mu
+        self.total_skills_text = QLineEdit(enabled=False)
+        form_inputs.addRow("Total Skill Gain:", self.total_skills_text)
 
         table = SkillTableView({"Skill": [], "Value": []}, 10, 2)
 
@@ -351,6 +393,11 @@ class Window(QWidget):
         target.setStyleSheet(stream.readAll())
 
         self.save_config()
+
+    def closeEvent(self, event):
+        if self.streamer_window:
+            self.streamer_window.close()
+        event.accept()
 
 
 def create_ui():
