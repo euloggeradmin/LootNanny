@@ -114,7 +114,7 @@ class StreamerWindow(QWidget):
             LayoutValue.PROFIT: f"{returns - cost:.2f}",
         }
         if cost > 0:
-            data[LayoutValue.PERCENTAGE_RETURN] = "%.2f" % (Decimal(returns) / Decimal(cost) * Decimal(100.0)) + "%"
+            data[LayoutValue.PERCENTAGE_RETURN] = "%.2f" % (Decimal(returns) / Decimal(cost) * Decimal(100.0))
         else:
             data[LayoutValue.PERCENTAGE_RETURN] = "0.00"
 

@@ -26,7 +26,10 @@ def screenshot_window():
         return None, 0, 0
 
     window = pygetwindow.getWindowsWithTitle(window_name)[0]
-    window.activate()
+    try:
+        window.activate()
+    except:
+        pass  # ignore for now
 
     im = pyautogui.screenshot()
 

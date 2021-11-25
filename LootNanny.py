@@ -103,8 +103,8 @@ class Window(QWidget):
         self.combat_module.damage_enhancers = self.config["damage_enhancers"]
         self.combat_module.accuracy_enhancers = self.config["accuracy_enhancers"]
         self.combat_module.active_character = self.config.get("name", "")
-        self.config_tab.chat_location_text.setText(self.config.get("location", ""))
         self.config_tab.chat_location = self.config.get("location", "")
+        self.config_tab.set_masked_chat_location()
         self.config_tab.recalculateWeaponFields()
 
         if self.config.get("streamer_layout", {}):

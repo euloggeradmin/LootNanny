@@ -106,6 +106,10 @@ class ConfigTab(QWidget):
         if not os.path.exists(os.path.expanduser(self.screenshot_directory)):
             os.makedirs(os.path.expanduser(self.screenshot_directory))
 
+    def set_masked_chat_location(self):
+        masked = "".join(["*" if ch != "/" else "/" for ch in self.chat_location])
+        self.chat_location_text.setText(masked)
+
     def set_new_streamer_layout(self):
         try:
             self.streamer_window_layout = json.loads(self.streamer_window_layout_text.toPlainText())
@@ -162,3 +166,4 @@ class ConfigTab(QWidget):
 
     def onChatLocationChanged(self):
         self.chat_location = self.chat_location_text.text()
+        self.set_masked_chat_location()
