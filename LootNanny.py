@@ -6,6 +6,7 @@ import traceback
 from datetime import datetime
 from copy import copy
 import json
+import webbrowser
 
 from utils.tables import *
 from modules.combat import CombatModule
@@ -75,11 +76,22 @@ class Window(QWidget):
         self.theme_btn = QPushButton("Toggle Theme")
         self.theme_btn.clicked.connect(lambda: self.toggle_stylesheet())
         self.theme_btn.setStyleSheet("background-color: white; color: black;")
+
+        self.donate_btn = QPushButton("Donate :)")
+        self.donate_btn.setStyleSheet("background-color: blue;")
+        self.donate_btn.released.connect(self.open_donation_window)
+        statusBar.addWidget(self.donate_btn)
+
         statusBar.addWidget(self.theme_btn)
+
 
         layout.addWidget(statusBar)
 
         self.initialize_from_config()
+
+    def open_donation_window(self):
+        url = "https://www.paypal.com/donate?hosted_button_id=QN5CN9A52Q59E"
+        webbrowser.open(url, new=0)
 
     def initialize_from_config(self):
         if not self.config:
