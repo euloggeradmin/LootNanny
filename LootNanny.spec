@@ -15,7 +15,9 @@ a = Analysis(['LootNanny.py'],
                 ("attachments.json", "."),
                 ("weapons.json", "."),
                 ("light.qss", "."),
-                ("dark.qss", ".")
+                ("dark.qss", "."),
+                ("sights.json", "."),
+                ("scopes.json", ".")
              ],
              hiddenimports=[],
              hookspath=[],

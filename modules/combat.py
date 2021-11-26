@@ -181,7 +181,10 @@ class HuntingTrip(object):
 
         if self.last_loot_instance != ts:
             # If looks like an enhancer break
-            if row.name == "Shrapnel" and row.amount == 8000:
+            if row.name == "Vibrant Sweat":
+                # Dont count sweat as a loot instance either
+                pass
+            elif row.name == "Shrapnel" and row.amount == 8000:
                 pass  # But we still add the shrapnel back to the total items looted
             else:
                 self.last_loot_instance = ts
@@ -268,6 +271,9 @@ class CombatModule(BaseModule):
         # Configuration
         self.active_weapon: str = None
         self.active_amp: str = None
+        self.active_scope: str = None
+        self.active_sight_1: str = None
+        self.active_sight_2: str = None
         self.damage_enhancers = 0
         self.accuracy_enhancers = 0
 
@@ -380,12 +386,14 @@ class CombatModule(BaseModule):
     def update_skill_table(self):
         if not self.active_run:
             return
+        self.skill_table.clear()
         self.skill_table.setData(self.active_run.get_skill_table_data())
         self.app.total_skills_text.setText(f"{self.active_run.get_total_skill_gain():.4f}")
 
     def update_enhancer_table(self):
         if not self.active_run:
             return
+        self.enhancer_table.clear()
         self.enhancer_table.setData(self.active_run.get_enhancer_table_data())
 
     def update_graphs(self):

@@ -1,0 +1,232 @@
+{
+  "Abrer Laser Sight": {
+    "ammo": 0,
+    "decay": "0.00046",
+    "type": "Sight"
+  },
+  "Beacin Laser Sight": {
+    "ammo": 0,
+    "decay": "0.00069",
+    "type": "Sight"
+  },
+  "Bullseye 1": {
+    "ammo": 0,
+    "decay": "0.0004",
+    "type": "Sight"
+  },
+  "Bullseye 2": {
+    "ammo": 0,
+    "decay": "0.0005",
+    "type": "Sight"
+  },
+  "Bullseye 3": {
+    "ammo": 0,
+    "decay": "0.0006",
+    "type": "Sight"
+  },
+  "Bullseye 4": {
+    "ammo": 0,
+    "decay": "0.0007",
+    "type": "Sight"
+  },
+  "Bullseye 5": {
+    "ammo": 0,
+    "decay": "0.0008",
+    "type": "Sight"
+  },
+  "Bullseye 6": {
+    "ammo": 0,
+    "decay": "0.0009",
+    "type": "Sight"
+  },
+  "Bullseye 7": {
+    "ammo": 0,
+    "decay": "0.001",
+    "type": "Sight"
+  },
+  "Bullseye 8": {
+    "ammo": 0,
+    "decay": "0.0011",
+    "type": "Sight"
+  },
+  "Bullseye I (L)": {
+    "ammo": 0,
+    "decay": "0.0004",
+    "type": "Sight"
+  },
+  "Bullseye II (L)": {
+    "ammo": 0,
+    "decay": "0.0005",
+    "type": "Sight"
+  },
+  "Bullseye III (L)": {
+    "ammo": 0,
+    "decay": "0.0",
+    "type": "Sight"
+  },
+  "Bullseye IV (L)": {
+    "ammo": 0,
+    "decay": "0.0",
+    "type": "Sight"
+  },
+  "Bullseye V (L)": {
+    "ammo": 0,
+    "decay": "0.0",
+    "type": "Sight"
+  },
+  "Bullseye VI (L)": {
+    "ammo": 0,
+    "decay": "0.0009",
+    "type": "Sight"
+  },
+  "Bullseye VII (L)": {
+    "ammo": 0,
+    "decay": "0.001",
+    "type": "Sight"
+  },
+  "Bullseye VIII (L)": {
+    "ammo": 0,
+    "decay": "0.0",
+    "type": "Sight"
+  },
+  "Castar Laser Sight": {
+    "ammo": 0,
+    "decay": "0.0",
+    "type": "Sight"
+  },
+  "Dynera Laser Sight": {
+    "ammo": 0,
+    "decay": "0.00096",
+    "type": "Sight"
+  },
+  "Ecivox Laser Sight": {
+    "ammo": 0,
+    "decay": "0.0",
+    "type": "Sight"
+  },
+  "Enkidd Dismalites (L)": {
+    "ammo": 0,
+    "decay": "0.0",
+    "type": "Sight"
+  },
+  "Framur Laser Sight": {
+    "ammo": 0,
+    "decay": "0.0",
+    "type": "Sight"
+  },
+  "Gargul Laser Sight": {
+    "ammo": 0,
+    "decay": "0.0009",
+    "type": "Sight"
+  },
+  "Hunnir Laser Sight": {
+    "ammo": 0,
+    "decay": "0.00098",
+    "type": "Sight"
+  },
+  "I.C.U Laser Sight Mk I": {
+    "ammo": 0,
+    "decay": "0.0003",
+    "type": "Sight"
+  },
+  "Ignaritz Laser Sight": {
+    "ammo": 0,
+    "decay": "0.00109",
+    "type": "Sight"
+  },
+  "Jakth Laser Sight": {
+    "ammo": 0,
+    "decay": "0.00126",
+    "type": "Sight"
+  },
+  "Lucky Laser Sight Mk I": {
+    "ammo": 0,
+    "decay": "0.0002",
+    "type": "Sight"
+  },
+  "Lucky Laser Sight Mk II": {
+    "ammo": 0,
+    "decay": "0.0",
+    "type": "Sight"
+  },
+  "Omegaton Laser Sight Mk. 1": {
+    "ammo": 0,
+    "decay": "0.00098",
+    "type": "Sight"
+  },
+  "Omegaton Laser Sight Mk. 2": {
+    "ammo": 0,
+    "decay": "0.00098",
+    "type": "Sight"
+  },
+  "Prototype Mounted Flashlight Smuggler": {
+    "ammo": 0,
+    "decay": "0.0",
+    "type": "Sight"
+  },
+  "S & B Mounted Light P1 (L)": {
+    "ammo": 0,
+    "decay": "0.0004",
+    "type": "Sight"
+  },
+  "S & B Mounted Light P2 (L)": {
+    "ammo": 0,
+    "decay": "0.0",
+    "type": "Sight"
+  },
+  "S & B Mounted Light R1 (L)": {
+    "ammo": 0,
+    "decay": "0.0",
+    "type": "Sight"
+  },
+  "S & B Mounted Light R2 (L)": {
+    "ammo": 0,
+    "decay": "0.0",
+    "type": "Sight"
+  },
+  "S & B Mounted Light R3 (L)": {
+    "ammo": 0,
+    "decay": "0.0",
+    "type": "Sight"
+  },
+  "S & B Mounted Light R4 (L)": {
+    "ammo": 0,
+    "decay": "0.0",
+    "type": "Sight"
+  },
+  "Seizzt Laser Sight 2000L": {
+    "ammo": 0,
+    "decay": "0.0002",
+    "type": "Sight"
+  },
+  "Seizzt Laser Sight 2000L+": {
+    "ammo": 0,
+    "decay": "0.00017",
+    "type": "Sight"
+  },
+  "Terrus Laser Sight SE600": {
+    "ammo": 0,
+    "decay": "0.0003",
+    "type": "Sight"
+  },
+  "Terrus Laser Sight SE700": {
+    "ammo": 0,
+    "decay": "0.00036",
+    "type": "Sight"
+  },
+  "Terrus Laser Sight SE800": {
+    "ammo": 0,
+    "decay": "0.00037",
+    "type": "Sight"
+  },
+  "Terrus Laser Sight SE900": {
+    "ammo": 0,
+    "decay": "0.0004",
+    "type": "Sight"
+  },
+  "ZX R-Dod": {
+    "ammo": 0,
+    "decay": "0.0002",
+    "type": "Sight"
+  }
+}

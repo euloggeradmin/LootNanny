@@ -5,6 +5,7 @@ import json
 from PyQt5.QtWidgets import QFileDialog, QTextEdit, QFormLayout, QHeaderView, QTabWidget, QCheckBox, QGridLayout, QComboBox, QLineEdit, QLabel, QApplication, QWidget, QPushButton, QVBoxLayout, QTableWidget, QTableWidgetItem
 
 from data.weapons import ALL_WEAPONS
+from data.sights_and_scopes import SIGHTS, SCOPES
 from data.attachments import ALL_ATTACHMENTS
 from data.creatures import ALL_CREATURES
 
@@ -30,11 +31,6 @@ class ConfigTab(QWidget):
         form_inputs.addWidget(btn)
         btn.clicked.connect(self.open_files)
 
-        # Creatue Configuration
-        targetCreature = QComboBox()
-        targetCreature.addItems(sorted(ALL_CREATURES))
-        form_inputs.addRow("Mob:", targetCreature)
-
         self.character_name = QLineEdit()
         form_inputs.addRow("Character Name:", self.character_name)
         self.character_name.editingFinished.connect(self.onNameChanged)
@@ -49,6 +45,21 @@ class ConfigTab(QWidget):
         self.amp_option.addItems(["Unamped"] + sorted(ALL_ATTACHMENTS))
         form_inputs.addRow("Amplifier:", self.amp_option)
         self.amp_option.currentIndexChanged.connect(self.onAmpChanged)
+
+        self.scope_option = QComboBox()
+        self.scope_option.addItems(["None"] + sorted(SCOPES))
+        form_inputs.addRow("Scope:", self.scope_option)
+        self.scope_option.currentIndexChanged.connect(self.onScopeChanged)
+
+        self.sight_1_option = QComboBox()
+        self.sight_1_option.addItems(["None"] + sorted(SIGHTS))
+        form_inputs.addRow("Sight 1:", self.sight_1_option)
+        self.sight_1_option.currentIndexChanged.connect(self.onScopeChanged)
+
+        self.sight_2_option = QComboBox()
+        self.sight_2_option.addItems(["None"] + sorted(SIGHTS))
+        form_inputs.addRow("Sight 2:", self.sight_2_option)
+        self.sight_2_option.currentIndexChanged.connect(self.onScopeChanged)
 
         self.damage_enhancers = QLineEdit(text="0")
         form_inputs.addRow("Damage Enhancers:", self.damage_enhancers)
@@ -134,11 +145,32 @@ class ConfigTab(QWidget):
         self.ammo_burn_text.setText(str(int(ammo)))
         self.weapon_decay_text.setText("%.6f" % decay)
 
+        scope = SCOPES.get(self.app.combat_module.active_scope)
+        if scope:
+            decay += scope["decay"]
+            ammo += scope["ammo"]
+
+        sight_1 = SIGHTS.get(self.app.combat_module.active_sight_1)
+        if sight_1:
+            decay += sight_1["decay"]
+            ammo += sight_1["ammo"]
+
+        sight_2 = SIGHTS.get(self.app.combat_module.active_sight_2)
+        if sight_2:
+            decay += sight_2["decay"]
+            ammo += sight_2["ammo"]
+
         self.app.combat_module.decay = decay
         self.app.combat_module.ammo_burn = ammo
 
         self.app.save_config()
         self.app.combat_module.update_active_run_cost()
+
+    def onScopeChanged(self):
+        self.app.combat_module.active_scope = self.scope_option.currentText()
+        self.app.combat_module.active_sight_1 = self.sight_1_option.currentText()
+        self.app.combat_module.active_sight_2 = self.sight_2_option.currentText()
+        self.recalculateWeaponFields()
 
     def load_from_config(self, config):
         self.damage_enhancers.setText(str(config["damage_enhancers"]))
@@ -146,6 +178,9 @@ class ConfigTab(QWidget):
         self.weapon_option.setCurrentText(config["weapon"])
         self.amp_option.setCurrentText(config["amp"])
         self.character_name.setText(config.get("name", ""))
+        self.sight_1_option.setCurrentText(config.get("sight_1", "None"))
+        self.sight_2_option.setCurrentText(config.get("sight_2", "None"))
+        self.scope_option.setCurrentText(config.get("scope", "None"))
 
     def onWeaponChanged(self):
         self.app.combat_module.active_weapon = self.weapon_option.currentText()

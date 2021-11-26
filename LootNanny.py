@@ -1,28 +1,29 @@
 from PyQt5.QtWidgets import QStatusBar, QFormLayout, QHeaderView, QTabWidget, QCheckBox, QGridLayout, QComboBox, QLineEdit, QLabel, QApplication, QWidget, QPushButton, QVBoxLayout, QTableWidget, QTableWidgetItem
-from PyQt5 import QtCore
 from PyQt5.QtCore import QFile, QTextStream
 import pyqtgraph as pg
 import traceback
 from datetime import datetime
-from copy import copy
-import json
 import webbrowser
 
-from utils.tables import *
-from modules.combat import CombatModule
-from views.configuration import ConfigTab
-from chat import ChatReader
-from config import CONFIG, save_config
-from version import VERSION
-from helpers import resource_path
-from windows.streamer import StreamerWindow
-
+from errors import log_crash
+try:
+    from utils.tables import *
+    from modules.combat import CombatModule
+    from views.configuration import ConfigTab
+    from chat import ChatReader
+    from config import CONFIG, save_config
+    from version import VERSION
+    from helpers import resource_path
+    from windows.streamer import StreamerWindow
+    from views.twitch import TwitchTab
+except Exception as e:
+    log_crash(e)
 
 MAIN_EVENT_LOOP_TICK = 0.1
 TICK_COUNTER = 0
 
 
-class Window(QWidget):
+class LootNanny(QWidget):
 
     def __init__(self):
         super().__init__()
@@ -51,6 +52,8 @@ class Window(QWidget):
         tabs.addTab(self.analysisTabUI(), "Analysis")
         tabs.addTab(self.skillTabUI(), "Skills")
         tabs.addTab(self.combatTabUI(), "Combat")
+        self.twitch = TwitchTab(self, self.config)
+        tabs.addTab(self.twitch, "Twitch")
 
         tabs.addTab(self.config_tab, "Config")
         layout.addWidget(tabs)
@@ -119,12 +122,16 @@ class Window(QWidget):
         config = {
             "weapon": self.combat_module.active_weapon,
             "amp": self.combat_module.active_amp,
+            "scope": self.combat_module.active_scope,
+            "sight_1": self.combat_module.active_sight_1,
+            "sight_2": self.combat_module.active_sight_2,
             "damage_enhancers": self.combat_module.damage_enhancers,
             "accuracy_enhancers": self.combat_module.accuracy_enhancers,
             "name": self.combat_module.active_character,
             "location": self.config_tab.chat_location,
             "theme": self.theme,
-            "streamer_layout": self.config_tab.streamer_window_layout
+            "streamer_layout": self.config_tab.streamer_window_layout,
+            "twitch": self.twitch.to_config()
         }
 
         save_config(config)
@@ -409,6 +416,8 @@ class Window(QWidget):
     def closeEvent(self, event):
         if self.streamer_window:
             self.streamer_window.close()
+        if self.twitch.twitch_bot:
+            pass # Clean tidy up needed
         event.accept()
 
 
@@ -416,7 +425,7 @@ def create_ui():
     app = QApplication([])
     app.setStyle('Fusion')
 
-    window = Window()
+    window = LootNanny()
     window.set_stylesheet(window, "dark.qss")
     window.show()
 

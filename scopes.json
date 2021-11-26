@@ -1,0 +1,212 @@
+{
+  "Alekz Precision Scope": {
+    "ammo": 0,
+    "decay": "0.00029",
+    "type": "Scope"
+  },
+  "Bjornir Precision Scope": {
+    "ammo": 0,
+    "decay": "0.00039",
+    "type": "Scope"
+  },
+  "Cinclar Precision Scope": {
+    "ammo": 0,
+    "decay": "0.00042",
+    "type": "Scope"
+  },
+  "Dacascos Precision Scope": {
+    "ammo": 0,
+    "decay": "0.00051",
+    "type": "Scope"
+  },
+  "Elkarr Precision Scope": {
+    "ammo": 0,
+    "decay": "0.00059",
+    "type": "Scope"
+  },
+  "Flexur Precision Scope": {
+    "ammo": 0,
+    "decay": "0.0",
+    "type": "Scope"
+  },
+  "Grender Precision Scope": {
+    "ammo": 0,
+    "decay": "0.0007",
+    "type": "Scope"
+  },
+  "Hanzor Precision Scope": {
+    "ammo": 0,
+    "decay": "0.00072",
+    "type": "Scope"
+  },
+  "Hawk 1k (L)": {
+    "ammo": 0,
+    "decay": "0.0",
+    "type": "Scope"
+  },
+  "Hawk 2k (L)": {
+    "ammo": 0,
+    "decay": "0.0",
+    "type": "Scope"
+  },
+  "Hawk 3k (L)": {
+    "ammo": 0,
+    "decay": "0.0",
+    "type": "Scope"
+  },
+  "Headshot 1": {
+    "ammo": 0,
+    "decay": "0.00023",
+    "type": "Scope"
+  },
+  "Headshot 2": {
+    "ammo": 0,
+    "decay": "0.00032",
+    "type": "Scope"
+  },
+  "Headshot 3": {
+    "ammo": 0,
+    "decay": "0.00041",
+    "type": "Scope"
+  },
+  "Headshot 4": {
+    "ammo": 0,
+    "decay": "0.0005",
+    "type": "Scope"
+  },
+  "Headshot I (L)": {
+    "ammo": 0,
+    "decay": "0.00023",
+    "type": "Scope"
+  },
+  "Headshot II (L)": {
+    "ammo": 0,
+    "decay": "0.0",
+    "type": "Scope"
+  },
+  "Headshot III (L)": {
+    "ammo": 0,
+    "decay": "0.0",
+    "type": "Scope"
+  },
+  "Headshot IV (L)": {
+    "ammo": 0,
+    "decay": "0.0",
+    "type": "Scope"
+  },
+  "Ikamar Precision Scope": {
+    "ammo": 0,
+    "decay": "0.00082",
+    "type": "Scope"
+  },
+  "Jzar Precision Scope": {
+    "ammo": 0,
+    "decay": "0.00088",
+    "type": "Scope"
+  },
+  "Longreach 1": {
+    "ammo": 0,
+    "decay": "0.00058",
+    "type": "Scope"
+  },
+  "Longreach 2": {
+    "ammo": 0,
+    "decay": "0.00066",
+    "type": "Scope"
+  },
+  "Longreach 3": {
+    "ammo": 0,
+    "decay": "0.00075",
+    "type": "Scope"
+  },
+  "Longreach 4": {
+    "ammo": 0,
+    "decay": "0.00083",
+    "type": "Scope"
+  },
+  "Longreach I (L)": {
+    "ammo": 0,
+    "decay": "0.0",
+    "type": "Scope"
+  },
+  "Longreach II (L)": {
+    "ammo": 0,
+    "decay": "0.0",
+    "type": "Scope"
+  },
+  "Longreach III (L)": {
+    "ammo": 0,
+    "decay": "0.0",
+    "type": "Scope"
+  },
+  "Longreach IV (L)": {
+    "ammo": 0,
+    "decay": "0.0",
+    "type": "Scope"
+  },
+  "Omegaton Ranger Scope Mk. 1": {
+    "ammo": 0,
+    "decay": "0.00071",
+    "type": "Scope"
+  },
+  "Omegaton Ranger Scope Mk. 2": {
+    "ammo": 0,
+    "decay": "0.00071",
+    "type": "Scope"
+  },
+  "Seizzt Ranger Scope 1800RS": {
+    "ammo": 0,
+    "decay": "0.0002",
+    "type": "Scope"
+  },
+  "Seizzt Ranger Scope 1850RS": {
+    "ammo": 0,
+    "decay": "0.0002",
+    "type": "Scope"
+  },
+  "Seizzt Ranger Scope 1900RS": {
+    "ammo": 0,
+    "decay": "0.00026",
+    "type": "Scope"
+  },
+  "Seizzt Ranger Scope 1950RS": {
+    "ammo": 0,
+    "decay": "0.00029",
+    "type": "Scope"
+  },
+  "Seizzt Ranger Scope 2500RS": {
+    "ammo": 0,
+    "decay": "0.00032",
+    "type": "Scope"
+  },
+  "Seizzt Ranger Scope 3500RS": {
+    "ammo": 0,
+    "decay": "0.00037",
+    "type": "Scope"
+  },
+  "Seizzt Ranger Scope 4000RS": {
+    "ammo": 0,
+    "decay": "0.0",
+    "type": "Scope"
+  },
+  "Sweet Scope Mk I": {
+    "ammo": 0,
+    "decay": "0.00029",
+    "type": "Scope"
+  },
+  "Sweet Scope Mk II": {
+    "ammo": 0,
+    "decay": "0.0",
+    "type": "Scope"
+  },
+  "Sweet Scope Mk III": {
+    "ammo": 0,
+    "decay": "0.0",
+    "type": "Scope"
+  },
+  "ZX Eagle Eye": {
+    "ammo": 0,
+    "decay": "0.00014",
+    "type": "Scope"
+  }
+}
