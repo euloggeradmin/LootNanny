@@ -279,7 +279,10 @@ class HuntingTrip(object):
 
     @property
     def total_return_mu_perc(self):
-        return self.total_return_mu / self.total_cost * 100
+        if (self.total_cost + self.extra_spend):
+            return self.total_return_mu / (self.total_cost + self.extra_spend) * 100
+        else:
+            return Decimal("0.0")
 
 
 class CombatModule(BaseModule):
@@ -331,6 +334,7 @@ class CombatModule(BaseModule):
                     self.active_run.add_combat_chat_row(chat_instance)
                     self.should_redraw_runs = True
                 elif isinstance(chat_instance, LootInstance):
+                    print(chat_instance)
                     self.active_run.add_loot_instance_chat_row(chat_instance)
                     self.should_redraw_runs = True
                 elif isinstance(chat_instance, EnhancerBreakages):
@@ -443,7 +447,7 @@ class CombatModule(BaseModule):
             d["Enhancers"].append(str(run.total_enhancer_breaks))
             d["Extra Spend"].append(str(run.extra_spend))
             d["Return"].append(run.tt_return)
-            if run.total_cost:
+            if run.total_cost + run.extra_spend:
                 d["%"].append("%.2f" % (run.tt_return / (run.total_cost + run.extra_spend) * 100) + "%")
                 d["mu%"].append("%.2f" % (run.total_return_mu_perc) + "%")
             else:
@@ -455,10 +459,11 @@ class CombatModule(BaseModule):
         self.active_run = HuntingTrip(datetime.now(), Decimal(self.ammo_burn) / Decimal(10000) + self.decay)
         self.runs.append(self.active_run)
 
-    def save_runs(self):
+    def save_runs(self, force=False):
         all_runs = []
         if not self.active_run:
-            return
+            if not force:
+                return
         for run in self.runs:
             serialized = run.serialize_run()
             all_runs.append(serialized)
