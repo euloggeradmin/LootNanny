@@ -343,10 +343,10 @@ class CombatModule(BaseModule):
                     self.active_run.add_skillgain_row(chat_instance)
                 elif isinstance(chat_instance, GlobalInstance):
                     if chat_instance.name.strip() == self.app.config.name.value.strip():
-                        if self.app.config_tab.screenshots_enabled:
+                        if self.app.config.screenshot_enabled.value:
                             t = threading.Thread(target=take_screenshot, args=(
-                                self.app.config_tab.screenshot_delay_ms,
-                                self.app.config_tab.screenshot_directory,
+                                self.app.config.screenshot_delay.value,
+                                self.app.config.screenshot_directory.value,
                                 chat_instance, ))
                             t.start()
                         self.active_run.add_global_row(chat_instance)

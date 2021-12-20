@@ -34,6 +34,7 @@ class Config(object):
     screenshot_directory = CU.ConfigValue("~/Documents/Globals/")
     screenshot_delay = CU.ConfigValue(500)
     screenshot_threshold = CU.ConfigValue(0)
+    screenshot_enabled = CU.ConfigValue(True)
 
     # Combat Configuration
     loadouts: List[Loadout] = CU.ConfigValue(None)

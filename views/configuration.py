@@ -75,7 +75,8 @@ class ConfigTab(QWidget):
         self.screenshot_delay_ms = 500
 
         self.screenshots_checkbox = QCheckBox()
-        self.screenshots_checkbox.setChecked(True)
+        self.screenshots_checkbox.setChecked(self.app.config.screenshot_enabled.value)
+        self.screenshots_checkbox.toggled.connect(self.update_screenshot_fields)
         form_inputs.addRow("Take Screenshot On global/hof", self.screenshots_checkbox)
 
         self.screenshots_directory_text = QLineEdit(text=self.app.config.screenshot_directory.ui_value)
@@ -172,6 +173,10 @@ class ConfigTab(QWidget):
         self.app.config.screenshot_threshold = int(self.screenshot_threshold.text())
         self.app.config.screenshot_delay = int(self.screenshots_delay.text())
         self.app.config.screenshot_directory = self.screenshots_directory_text.text()
+        self.app.config.screenshot_enabled = self.screenshots_checkbox.isChecked()
+
+        if not os.path.exists(os.path.expanduser(self.app.config.screenshot_directory.value)):
+            os.makedirs(os.path.expanduser(self.app.config.screenshot_directory.value))
 
     def set_new_streamer_layout(self):
         try:
