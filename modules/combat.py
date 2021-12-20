@@ -1,4 +1,4 @@
-from collections import defaultdict
+from collections import defaultdict, namedtuple
 from datetime import datetime
 import time
 from typing import List
@@ -12,9 +12,11 @@ from modules.base import BaseModule
 from chat import BaseChatRow, CombatRow, LootInstance, SkillRow, EnhancerBreakages, HealRow, GlobalInstance
 from helpers import dt_to_ts, ts_to_dt, format_filename
 from ocr import screenshot_window
+from modules.markup import MarkupStore
 
 
 SAVE_FILENAME = format_filename("runs.json")
+MarkupSingleton = MarkupStore()
 
 
 def take_screenshot(delay_ms, directory, glob: GlobalInstance):
@@ -28,8 +30,10 @@ def take_screenshot(delay_ms, directory, glob: GlobalInstance):
     ts = time.mktime(glob.time.timetuple())
     screenshot_name = f"{glob.creature}_{glob.value}_{ts}.png"
     screenshot_fullpath = os.path.join(os.path.expanduser(directory), screenshot_name)
-    print(screenshot_fullpath)
     im.save(screenshot_fullpath)
+
+
+Loadout = namedtuple("Loadout", ["weapon", "amp", "sight_1", "sight_2", "scope", "damage_enh", "accuracy_enh"])
 
 
 class HuntingTrip(object):
@@ -37,6 +41,8 @@ class HuntingTrip(object):
     def __init__(self, time_start: datetime, cost_per_shot: Decimal):
         self.time_start = time_start
         self.time_end = None
+
+        self.notes = ""
 
         self.cost_per_shot: Decimal = cost_per_shot
 
@@ -47,6 +53,7 @@ class HuntingTrip(object):
 
         self.last_loot_instance = None
         self.loot_instances = 0
+        self.extra_spend = Decimal(0.0)
 
         # Tracking multipliers
         self.loot_instance_cost = Decimal(0)
@@ -74,12 +81,14 @@ class HuntingTrip(object):
         return {
             "start": dt_to_ts(self.time_start),
             "end": dt_to_ts(self.time_end) if self.time_end else None,
+            "notes": self.notes,
             "config": {
                 "cps": str(self.cost_per_shot)
             },
             "summary": {
                 "tt_return": str(self.tt_return),
                 "total_cost": str(self.total_cost),
+                "extra_spend": str(self.extra_spend),
                 "globals": self.globals,
                 "hofs": self.hofs,
                 "loots": self.loot_instances,
@@ -103,12 +112,14 @@ class HuntingTrip(object):
     @classmethod
     def from_seralized(cls, seralized):
         inst = cls(ts_to_dt(seralized["start"]), Decimal(seralized["config"]["cps"]))
+        inst.notes = seralized.get("notes", "")
 
         if seralized["end"]:
             inst.time_end = ts_to_dt(seralized["end"])
 
         # loot
         inst.tt_return = Decimal(seralized["summary"]["tt_return"])
+        inst.extra_spend = Decimal(seralized["summary"].get("extra_spend", "0.0"))
         inst.globals = seralized["summary"]["globals"]
         inst.hofs = seralized["summary"]["hofs"]
         inst.loot_instances = seralized["summary"]["loots"]
@@ -184,7 +195,7 @@ class HuntingTrip(object):
             if row.name == "Vibrant Sweat":
                 # Dont count sweat as a loot instance either
                 pass
-            elif row.name == "Shrapnel" and row.amount == 8000:
+            elif row.name == "Shrapnel" and row.amount in {8000, 4000, 6000}:
                 pass  # But we still add the shrapnel back to the total items looted
             else:
                 self.last_loot_instance = ts
@@ -220,7 +231,7 @@ class HuntingTrip(object):
     @property
     def dpp(self):
         if self.total_cost > Decimal(0):
-            return Decimal(self.total_damage) / Decimal(self.total_cost * 100)
+            return Decimal(self.total_damage) / Decimal(self.total_cost + self.extra_spend * 100)
         return Decimal(0.0)
 
     def get_skill_table_data(self):
@@ -241,12 +252,34 @@ class HuntingTrip(object):
         return d
 
     def get_item_loot_table_data(self):
-        r = {"Item": [], "Value": [], "Count": []}
+        r = {"Item": [], "Value": [], "Count": [], "Markup": [], "Total Value": []}
         for k, v in sorted(self.looted_items.items(), key=lambda t: t[1]["v"], reverse=True):
             r["Item"].append(k)
             r["Value"].append(str(v["v"]))
             r["Count"].append(str(v["c"]))
+            mu = MarkupSingleton.get_markup_for_item(k)
+            if mu.is_absolute:
+                r["Markup"].append("+{:.3f}".format(mu.value))
+                r["Total Value"].append("{:.4f}".format(v["v"] + (v["c"] * mu.value)))
+            else:
+                r["Markup"].append("{:.3f}%".format(mu.value * 100))
+                r["Total Value"].append("{:.4f}".format(v["v"] * mu.value))
         return r
+
+    @property
+    def total_return_mu(self):
+        total_return_mu = Decimal("0.0")
+        for k, v in self.looted_items.items():
+            mu = MarkupSingleton.get_markup_for_item(k)
+            if mu.is_absolute:
+                total_return_mu += (v["v"] + (v["c"] * mu.value))
+            else:
+                total_return_mu += (v["v"] * mu.value)
+        return total_return_mu
+
+    @property
+    def total_return_mu_perc(self):
+        return self.total_return_mu / self.total_cost * 100
 
 
 class CombatModule(BaseModule):
@@ -258,7 +291,7 @@ class CombatModule(BaseModule):
         # Core
         self.is_logging = False
         self.is_paused = False
-        self.active_character = ""  # the name of the character
+        self.should_redraw_runs = True
 
         # Both of these are set by the parent app
         self.loot_table = None
@@ -267,15 +300,6 @@ class CombatModule(BaseModule):
         self.enhancer_table = None
         self.combat_fields = {}
         self.loot_fields = {}
-
-        # Configuration
-        self.active_weapon: str = None
-        self.active_amp: str = None
-        self.active_scope: str = None
-        self.active_sight_1: str = None
-        self.active_sight_2: str = None
-        self.damage_enhancers = 0
-        self.accuracy_enhancers = 0
 
         # Calculated Configuration
         self.ammo_burn = 0
@@ -305,14 +329,16 @@ class CombatModule(BaseModule):
             for chat_instance in lines:
                 if isinstance(chat_instance, CombatRow):
                     self.active_run.add_combat_chat_row(chat_instance)
+                    self.should_redraw_runs = True
                 elif isinstance(chat_instance, LootInstance):
                     self.active_run.add_loot_instance_chat_row(chat_instance)
+                    self.should_redraw_runs = True
                 elif isinstance(chat_instance, EnhancerBreakages):
                     self.active_run.add_enhancer_break_row(chat_instance)
                 elif isinstance(chat_instance, SkillRow):
                     self.active_run.add_skillgain_row(chat_instance)
                 elif isinstance(chat_instance, GlobalInstance):
-                    if chat_instance.name.strip() == self.active_character.strip():
+                    if chat_instance.name.strip() == self.app.config.name.value.strip():
                         if self.app.config_tab.screenshots_enabled:
                             t = threading.Thread(target=take_screenshot, args=(
                                 self.app.config_tab.screenshot_delay_ms,
@@ -324,8 +350,9 @@ class CombatModule(BaseModule):
             if self.app.streamer_window:
                 self.app.streamer_window.set_text_from_module(self)
 
-        if self.runs:
+        if self.runs and self.should_redraw_runs:
             self.update_tables()
+            self.should_redraw_runs = False
 
     def update_tables(self):
         self.update_loot_table()
@@ -405,19 +432,23 @@ class CombatModule(BaseModule):
         self.multiplier_graph.plot(*self.active_run.multipliers, pen=None, symbol="o")
 
     def get_runs_data(self):
-        d = {"Start": [], "End": [], "Spend": [], "Enhancers": [], "Extra Spend": [], "Return": [], "%": []}
+        d = {"Notes": [], "Start": [], "End": [], "Spend": [],
+             "Enhancers": [], "Extra Spend": [], "Return": [], "%": [], "mu%": []}
         for run in self.runs[::-1]:
             run: HuntingTrip
+            d["Notes"].append(run.notes)
             d["Start"].append(run.time_start.strftime("%Y-%m-%d %H:%M:%S"))
             d["End"].append(run.time_end.strftime("%Y-%m-%d %H:%M:%S") if run.time_end else "")
             d["Spend"].append("%.2f" % run.total_cost)
             d["Enhancers"].append(str(run.total_enhancer_breaks))
-            d["Extra Spend"].append("")
+            d["Extra Spend"].append(str(run.extra_spend))
             d["Return"].append(run.tt_return)
             if run.total_cost:
-                d["%"].append("%.2f" % (run.tt_return / run.total_cost * 100) + "%")
+                d["%"].append("%.2f" % (run.tt_return / (run.total_cost + run.extra_spend) * 100) + "%")
+                d["mu%"].append("%.2f" % (run.total_return_mu_perc) + "%")
             else:
                 d["%"].append("%")
+                d["mu%"].append("%")
         return d
 
     def create_new_run(self):
@@ -439,7 +470,13 @@ class CombatModule(BaseModule):
             return
 
         with open(SAVE_FILENAME, 'r') as f:
-            data = json.loads(f.read())
+            try:
+                raw_data = f.read()
+                data = json.loads(raw_data)
+            except:
+                print("Corrpted Runs File Detected")
+                print(raw_data)
+                data = {}
 
         for run_data in data:
             run = HuntingTrip.from_seralized(run_data)

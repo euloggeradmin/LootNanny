@@ -73,7 +73,11 @@ class LootInstance(BaseChatRow):
         super().__init__()
         self.name = name
         self.amount = int(amount)
-        self.value = Decimal(value)
+
+        if name == "Shrapnel":
+            self.value = Decimal(amount) / 10000
+        else:
+            self.value = Decimal(value)
 
 
 class GlobalInstance(BaseChatRow):
@@ -113,6 +117,7 @@ REGEXES = {
     re.compile("You Evaded the attack"): (ChatType.EVADE, BaseChatRow, {}),
     re.compile("The target Dodged your attack"): (ChatType.DODGE, CombatRow, {"miss": True}),
     re.compile("The target Evaded your attack"): (ChatType.DODGE, CombatRow, {"miss": True}),
+    re.compile("The target Jammed your attack"): (ChatType.DODGE, CombatRow, {"miss": True}),
     re.compile("You took (\d+\.\d+) points of damage"): (ChatType.DAMAGE, BaseChatRow, {}),
     re.compile("You have gained (\d+\.\d+) experience in your ([a-zA-Z ]+) skill"): (ChatType.SKILL, SkillRow, {}),
     re.compile("You have gained (\d+\.\d+) ([a-zA-Z ]+)"): (ChatType.SKILL, SkillRow, {}),
@@ -140,10 +145,10 @@ class ChatReader(object):
         if self.reader:
             return
 
-        if not self.app.config_tab.chat_location:
+        if not self.app.config.location.value:
             return
 
-        self.fd = tailer.follow(open(self.app.config_tab.chat_location, "r", encoding="utf_8_sig"), delay=0.01)
+        self.fd = tailer.follow(open(self.app.config.location.value, "r", encoding="utf_8_sig"), delay=0.01)
         self.reader = threading.Thread(target=self.readlines, daemon=True)
         self.reader.start()
 

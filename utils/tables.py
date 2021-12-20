@@ -25,35 +25,39 @@ class BaseTableView(QTableWidget):
 
 
 class RunsView(BaseTableView):
-    COLUMNS = ("Start", "End", "Spend", "Enhancers", "Extra Spend", "Return", "%")
+    COLUMNS = ("Notes", "Start", "End", "Spend", "Enhancers", "Extra Spend", "Return", "%", "mu%")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        #self.cellChanged.connect(self.onCellChanged)
         header = self.horizontalHeader()
         header.setSectionResizeMode(0, QHeaderView.Stretch)
-        header.setSectionResizeMode(1, QHeaderView.Stretch)
+        header.setSectionResizeMode(1, QHeaderView.ResizeToContents)
         header.setSectionResizeMode(2, QHeaderView.ResizeToContents)
         header.setSectionResizeMode(3, QHeaderView.ResizeToContents)
         header.setSectionResizeMode(4, QHeaderView.ResizeToContents)
         header.setSectionResizeMode(5, QHeaderView.ResizeToContents)
         header.setSectionResizeMode(6, QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(7, QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(8, QHeaderView.ResizeToContents)
 
         self.setSelectionBehavior(QAbstractItemView.SelectRows)
 
 
 class LootTableView(BaseTableView):
-    COLUMNS = ("Item", "Count", "Value")
+    COLUMNS = ("Item", "Count", "Value", "Markup", "Total Value")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        #self.cellChanged.connect(self.onCellChanged)
         header = self.horizontalHeader()
         header.setSectionResizeMode(0, QHeaderView.Stretch)
         header.setSectionResizeMode(1, QHeaderView.ResizeToContents)
         header.setSectionResizeMode(2, QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(3, QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(4, QHeaderView.ResizeToContents)
+
+        self.setSelectionBehavior(QAbstractItemView.SelectRows)
 
 
 class SkillTableView(BaseTableView):
@@ -74,3 +78,22 @@ class EnhancerTableView(BaseTableView):
         header = self.horizontalHeader()
         header.setSectionResizeMode(0, QHeaderView.Stretch)
         header.setSectionResizeMode(1, QHeaderView.Stretch)
+
+
+class WeaponTable(BaseTableView):
+    COLUMNS = ("Name", "Amp", "Scope", "Sight 1", "Sight 2", "Damage", "Accuracy")
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        #self.cellChanged.connect(self.onCellChanged)
+        header = self.horizontalHeader()
+        header.setSectionResizeMode(0, QHeaderView.Stretch)
+        header.setSectionResizeMode(1, QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(2, QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(3, QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(4, QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(5, QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(6, QHeaderView.ResizeToContents)
+
+        self.setSelectionBehavior(QAbstractItemView.SelectRows)

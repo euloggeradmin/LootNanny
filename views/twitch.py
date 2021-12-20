@@ -23,16 +23,8 @@ class TwitchTab(QWidget):
 
         self.app = app
 
-        # Configuration Variables
-        self.oauth_token = ""
-        self.username = "LootNanny"
-        self.channel = ""
-        self.command_prefix = "!"
-
         self.command_toggles = {}
-        self.commands_enabled = {cmd for cmd in Commands}
 
-        self.load_from_config(config)
         self.create_layout()
 
         # Bot
@@ -41,13 +33,6 @@ class TwitchTab(QWidget):
 
         # Finalize Initialization
         self.validate_settings()
-
-    def load_from_config(self, config: dict):
-        self.channel = config.get("twitch", {}).get("channel", "")
-        self.oauth_token = config.get("twitch", {}).get("token", "")
-        self.username = config.get("twitch", {}).get("username", self.username)
-        self.command_prefix = config.get("twitch", {}).get("prefix", self.command_prefix)
-        self.commands_enabled = [Commands(c) for c in config.get("twitch", {}).get("commands_enabled", self.commands_enabled)]
 
     def to_config(self):
         return {
@@ -65,7 +50,7 @@ class TwitchTab(QWidget):
         layout.addLayout(form_inputs)
 
         # Chat Location
-        self.oauth_token_text = QLineEdit(self.oauth_token)
+        self.oauth_token_text = QLineEdit(self.app.config.twitch_token.ui_value)
         self.oauth_token_text.editingFinished.connect(self.on_settings_changed)
         form_inputs.addRow("OAuth Token:", self.oauth_token_text)
 
@@ -73,21 +58,21 @@ class TwitchTab(QWidget):
         btn.released.connect(lambda: webbrowser.open("https://twitchapps.com/tmi"))
         form_inputs.addWidget(btn)
 
-        self.username_text = QLineEdit(self.username, enabled=False)
+        self.username_text = QLineEdit(self.app.config.twitch_username.ui_value, enabled=False)
         self.username_text.editingFinished.connect(self.on_settings_changed)
         form_inputs.addRow("Bot Name:", self.username_text)
 
-        self.channel_text = QLineEdit(self.channel)
+        self.channel_text = QLineEdit(self.app.config.twitch_channel.ui_value)
         self.channel_text.editingFinished.connect(self.on_settings_changed)
         form_inputs.addRow("Channel:", self.channel_text)
 
-        self.command_prefix_text = QLineEdit(self.command_prefix)
+        self.command_prefix_text = QLineEdit(self.app.config.twitch_prefix.ui_value)
         self.command_prefix_text.editingFinished.connect(self.on_settings_changed)
         form_inputs.addRow("Command Prefix:", self.command_prefix_text)
 
         for i, cmd in enumerate(Commands):
             widget = QCheckBox(CMD_NAMES[cmd.value], self)
-            widget.setChecked(cmd in self.commands_enabled)
+            widget.setChecked(cmd in self.app.config.twitch_commands_enabled.value)
             layout.addWidget(widget)
             widget.toggled.connect(self.on_commands_toggled)
             self.command_toggles[cmd] = widget
@@ -119,16 +104,21 @@ class TwitchTab(QWidget):
         self.twitch_bot_thread.start()
 
     def on_settings_changed(self):
-        self.oauth_token = self.oauth_token_text.text()
-        self.username = self.username_text.text()
-        self.channel = self.channel_text.text()
-        self.command_prefix = self.command_prefix_text.text()
+        self.app.config.twitch_token = self.oauth_token_text.text()
+        self.app.config.twitch_username = self.username_text.text()
+        self.app.config.twitch_channel = self.channel_text.text()
+        self.app.config.twitch_prefix = self.command_prefix_text.text()
 
         self.validate_settings()
         self.app.save_config()
 
     def validate_settings(self):
-        if all([self.oauth_token, self.username, self.channel, self.command_prefix]):
+        if all([
+            self.app.config.twitch_token.value,
+            self.app.config.twitch_username.value,
+            self.app.config.twitch_channel.value,
+            self.app.config.twitch_prefix.value
+        ]):
             self.start_btn.setEnabled(True)
         else:
             self.start_btn.setEnabled(False)
@@ -137,7 +127,7 @@ class TwitchTab(QWidget):
         for command, checkbox in self.command_toggles.items():
             checkbox: QComboBox
             if checkbox.isChecked():
-                self.commands_enabled.add(command)
+                self.app.config.twitch_commands_enabled.value.add(command)
             else:
-                self.commands_enabled.discard(command)
+                self.app.config.twitch_commands_enabled.value.discard(command)
         self.app.save_config()

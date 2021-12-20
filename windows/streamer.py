@@ -11,10 +11,13 @@ from decimal import Decimal
 
 class LayoutValue(str, Enum):
     PERCENTAGE_RETURN = "PERCENTAGE_RETURN"
+    PERCENTAGE_RETURN_MU = "PERCENTAGE_RETURN_MU"
     TOTAL_LOOTS = "TOTAL_LOOTS"
     TOTAL_SPEND = "TOTAL_SPEND"
+    TT_RETURN = "TT_RETURN"
     TOTAL_RETURN = "TOTAL_RETURN"
     PROFIT = "PROFIT"
+    TT_PROFIT = "TT_PROFIT"
     DPP = "DPP"
     GLOBALS = "GLOBALS"
     HOFS = "HOFS"
@@ -38,7 +41,7 @@ class StreamerWindow(QWidget):
 
         self.widget_mappings: Dict[LayoutValue, QWidget] = defaultdict(lambda: [])
         self.layout = self.create_widgets()
-        self.set_text_from_data(0, 0.0, 0.0, 0, 0, 0.0)
+        self.set_text_from_data(0, 0.0, 0.0, 0, 0, 0.0, 0.0, 0.0, 0.0)
         self.resize_to_contents()
 
         # show all the widgets
@@ -70,7 +73,7 @@ class StreamerWindow(QWidget):
         layout = QHBoxLayout()
         self.setLayout(layout)
 
-        for column in self.app.config_tab.streamer_window_layout["layout"]:
+        for column in self.app.config.streamer_layout.value["layout"]:
 
             # Create a new column layout and add it to the horizontal box
             column_layout = QVBoxLayout()
@@ -85,7 +88,7 @@ class StreamerWindow(QWidget):
                 format_str = column_fields[0]
 
                 this_label = QLabel()
-                this_label.setStyleSheet(self.app.config_tab.streamer_window_layout.get("style", "") + this_style)
+                this_label.setStyleSheet(self.app.config.streamer_layout.value.get("style", "") + this_style)
                 column_layout.addWidget(this_label)
 
                 self.widget_mappings[value_type].append((format_str, this_label))
@@ -100,23 +103,30 @@ class StreamerWindow(QWidget):
             combat_module.active_run.tt_return,
             combat_module.active_run.hofs,
             combat_module.active_run.globals,
-            combat_module.active_run.dpp
+            combat_module.active_run.dpp,
+            combat_module.active_run.total_return_mu,
+            combat_module.active_run.total_return_mu_perc,
+            combat_module.active_run.total_return_mu - combat_module.active_run.total_cost
         )
 
-    def set_text_from_data(self, loots, cost, returns, hofs, globals, dpp):
+    def set_text_from_data(self, loots, cost, returns, hofs, globals, dpp, total_returns, total_return_mu_perc, profit):
         data = {
             LayoutValue.DPP: f"{dpp:.4f}",
             LayoutValue.GLOBALS: f"{globals:,}",
             LayoutValue.HOFS: f"{hofs:,}",
             LayoutValue.TOTAL_LOOTS: f"{loots:,}",
-            LayoutValue.TOTAL_RETURN: f"{returns:.2f}",
+            LayoutValue.TT_RETURN: f"{returns:.2f}",
             LayoutValue.TOTAL_SPEND: f"{cost:.2f}",
-            LayoutValue.PROFIT: f"{returns - cost:.2f}",
+            LayoutValue.TT_PROFIT: f"{returns - cost:.2f}",
+            LayoutValue.TOTAL_RETURN: f"{total_returns:.2f}",
+            LayoutValue.PROFIT: f"{profit:.2f}"
         }
         if cost > 0:
             data[LayoutValue.PERCENTAGE_RETURN] = "%.2f" % (Decimal(returns) / Decimal(cost) * Decimal(100.0))
+            data[LayoutValue.PERCENTAGE_RETURN_MU] = "%.2f" % total_return_mu_perc
         else:
             data[LayoutValue.PERCENTAGE_RETURN] = "0.00"
+            data[LayoutValue.PERCENTAGE_RETURN_MU] = "0.00"
 
         for data_type, widget_data in self.widget_mappings.items():
             for format_str, widget in widget_data:

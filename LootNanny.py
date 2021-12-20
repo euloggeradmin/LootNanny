@@ -4,6 +4,11 @@ import pyqtgraph as pg
 import traceback
 from datetime import datetime
 import webbrowser
+from decimal import Decimal
+
+import os
+import sys
+sys.path.append(os.path.join(os.path.dirname(__file__)))
 
 from errors import log_crash
 try:
@@ -11,11 +16,12 @@ try:
     from modules.combat import CombatModule
     from views.configuration import ConfigTab
     from chat import ChatReader
-    from config import CONFIG, save_config
+    from config import Config
     from version import VERSION
     from helpers import resource_path
     from windows.streamer import StreamerWindow
     from views.twitch import TwitchTab
+    from modules.combat import MarkupSingleton
 except Exception as e:
     log_crash(e)
 
@@ -27,7 +33,7 @@ class LootNanny(QWidget):
 
     def __init__(self):
         super().__init__()
-        self.config = CONFIG
+        self.config = Config()
 
         # Other Windows
         self.streamer_window = None
@@ -41,10 +47,11 @@ class LootNanny(QWidget):
         self.setLayout(layout)
 
         # Modules
+        self.combat_module = CombatModule(self)
+
         self.config_tab = ConfigTab(self)
 
         self.chat_reader = ChatReader(self)
-        self.combat_module = CombatModule(self)
 
         # Create the tab widget with two tabs
         tabs = QTabWidget()
@@ -100,41 +107,12 @@ class LootNanny(QWidget):
         if not self.config:
             return
 
-        self.config_tab.load_from_config(self.config)
-        self.combat_module.active_weapon = self.config["weapon"]
-        self.combat_module.active_amp = self.config["amp"]
-        self.combat_module.damage_enhancers = self.config["damage_enhancers"]
-        self.combat_module.accuracy_enhancers = self.config["accuracy_enhancers"]
-        self.combat_module.active_character = self.config.get("name", "")
-        self.config_tab.chat_location = self.config.get("location", "")
-        self.config_tab.set_masked_chat_location()
-        self.config_tab.recalculateWeaponFields()
-
-        if self.config.get("streamer_layout", {}):
-            self.config_tab.streamer_window_layout = self.config.get("streamer_layout", {})
-
-        self.theme = self.config.get("theme", "dark")
-        if self.theme == "light":
+        if self.config.theme.value == "light":
             self.set_stylesheet(self, "light.qss")
             self.theme_btn.setStyleSheet("background-color: #222222; color: white;")
 
     def save_config(self):
-        config = {
-            "weapon": self.combat_module.active_weapon,
-            "amp": self.combat_module.active_amp,
-            "scope": self.combat_module.active_scope,
-            "sight_1": self.combat_module.active_sight_1,
-            "sight_2": self.combat_module.active_sight_2,
-            "damage_enhancers": self.combat_module.damage_enhancers,
-            "accuracy_enhancers": self.combat_module.accuracy_enhancers,
-            "name": self.combat_module.active_character,
-            "location": self.config_tab.chat_location,
-            "theme": self.theme,
-            "streamer_layout": self.config_tab.streamer_window_layout,
-            "twitch": self.twitch.to_config()
-        }
-
-        save_config(config)
+        self.config.save()
 
     def on_toggle_streamer_ui(self):
         if self.streamer_window:
@@ -232,10 +210,14 @@ class LootNanny(QWidget):
         hofs = QLineEdit(enabled=False)
         form_inputs.addRow("HOFs:", hofs)
 
-        table = LootTableView({"Item": [], "Value": [], "Count": []}, 30, 3)
-        self.runs = RunsView({"Start": [], "End": [], "Spend": [], "Enhancers": [],
-                         "Extra Spend": [], "Return": [], "%": []}, 15, 7)
+        self.item_table = LootTableView({"Item": [], "Value": [], "Count": [], "Markup": [], "Total Value": []}, 30, 5)
+        self.runs = RunsView({"Notes": [], "Start": [], "End": [], "Spend": [], "Enhancers": [],
+                         "Extra Spend": [], "Return": [], "%": [], "mu%": []}, 40, 9)
         self.runs.itemClicked.connect(self.onLootTableClicked)
+        self.runs.model().dataChanged.connect(self.onRunsChanged)
+
+        self.item_table.itemClicked.connect(self.on_loot_item_selected)
+        self.item_table.model().dataChanged.connect(self.on_markup_changed)
 
         # Run Management buttons
         self.delete_run_button = QPushButton("Delete Run", enabled=False)
@@ -243,7 +225,7 @@ class LootNanny(QWidget):
         self.delete_run_button.released.connect(self.delete_runs)
         self.delete_run_button.hide()
 
-        self.combat_module.loot_table = table
+        self.combat_module.loot_table = self.item_table
         self.combat_module.runs_table = self.runs
         self.combat_module.loot_fields = {
             "looted_text": looted_text,
@@ -258,10 +240,51 @@ class LootNanny(QWidget):
         layout.addLayout(form_inputs)
         layout.addWidget(self.runs)
         layout.addWidget(self.delete_run_button)
-        layout.addWidget(table)
+        layout.addWidget(self.item_table)
 
         generalTab.setLayout(layout)
         return generalTab
+
+    def onRunsChanged(self):
+        indexes = self.runs.selectionModel().selectedRows()
+        if not indexes:
+            return
+        changed = [(i.row(), len(self.combat_module.runs) - 1 - i.row()) for i in indexes][0]
+        notes_cell = self.runs.item(changed[0], 0)
+        spend_cell = self.runs.item(changed[0], 5)
+        try:
+            extra_spend = Decimal(spend_cell.text() or "0")
+        except:
+            extra_spend = 0.0
+            spend_cell.setText("0.0")
+        self.combat_module.runs[changed[1]].extra_spend = extra_spend
+        self.combat_module.runs[changed[1]].notes = notes_cell.text()
+        self.combat_module.should_redraw_runs = True
+        self.clear_run_selection()
+
+    def on_markup_changed(self):
+        selected_rows = self.item_table.selectionModel().selectedRows()
+        if not selected_rows:
+            return
+        selected_row = selected_rows[0].row()
+        name_cell = self.item_table.item(selected_row, 0)
+        markup_cell = self.item_table.item(selected_row, 3)
+        MarkupSingleton.add_markup_for_item(name_cell.text(), markup_cell.text())
+        self.combat_module.update_loot_table()
+        self.clear_loot_item_table_selection()
+
+    def on_loot_item_selected(self):
+        indexes = self.item_table.selectionModel().selectedRows()
+        if not indexes:
+            return
+        self.loot_item_to_change = [len(self.combat_module.runs) - 1 - i.row() for i in indexes][0]
+
+    def clear_loot_item_table_selection(self):
+        self.item_table.selectionModel().clearSelection()
+
+    def clear_run_selection(self):
+        self.runs.selectionModel().clearSelection()
+        self.delete_run_button.hide()
 
     def onLootTableClicked(self):
         self.delete_run_button.show()
@@ -293,6 +316,7 @@ class LootNanny(QWidget):
             self.combat_module.active_run = None
         self.runs.clear()
         self.combat_module.update_runs_table()
+        self.clear_run_selection()
 
     def analysisTabUI(self):
         analysisTab = QWidget()
@@ -329,7 +353,7 @@ class LootNanny(QWidget):
         self.total_skills_text = QLineEdit(enabled=False)
         form_inputs.addRow("Total Skill Gain:", self.total_skills_text)
 
-        table = SkillTableView({"Skill": [], "Value": []}, 10, 2)
+        table = SkillTableView({"Skill": [], "Value": []}, 40, 2)
 
         # eulogger.skill_table = table
         layout.addLayout(form_inputs)
