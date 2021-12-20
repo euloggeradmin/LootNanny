@@ -50,13 +50,13 @@ def version_1_to_2(old_version: dict) -> dict:
     old_version["version"] = 2
 
     # Transform Loadouts
-    loadout = Loadout(old_version.pop("weapon"),
-                      old_version.pop("amp"),
-                      old_version.pop("sight_1"),
-                      old_version.pop("sight_2"),
-                      old_version.pop("scope"),
-                      old_version.pop("damage_enhancers"),
-                      old_version.pop("accuracy_enhancers"))
+    loadout = Loadout(old_version.pop("weapon", "Sollomate Opalo"),
+                      old_version.pop("amp", "Unamped"),
+                      old_version.pop("sight_1", "None"),
+                      old_version.pop("sight_2", "None"),
+                      old_version.pop("scope", "None"),
+                      old_version.pop("damage_enhancers", 0),
+                      old_version.pop("accuracy_enhancers", 0))
     old_version["loadouts"] = [loadout]
 
     twitch_config = old_version.pop("twitch", {})
