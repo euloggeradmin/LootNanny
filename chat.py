@@ -127,13 +127,13 @@ REGEXES = {
 }
 
 GLOBAL_REGEXES = {
-    re.compile(r"([\w\s\(\)]+) killed a creature \(([\w\s\(\)]+)\) with a value of (\d+) PED! A record has been added to the Hall of Fame!"): (ChatType.GLOBAL, GlobalInstance, {"hof": True}),
-    re.compile(r"([\w\s\(\)]+) killed a creature \(([\w\s\(\)]+)\) with a value of (\d+) PED!"): (ChatType.GLOBAL, GlobalInstance, {}),
-    re.compile(r"([\w\s\(\)]+) constructed an item \(([\w\s\(\)]+)\) worth (\d+) PED! A record has been added to the Hall of Fame!"): (ChatType.GLOBAL, GlobalInstance, {"hof": True}),
-    re.compile(r"([\w\s\(\)]+) constructed an item \(([\w\s\(\)]+)\) worth (\d+) PED!"): (ChatType.GLOBAL, GlobalInstance, {}),
-    re.compile(r"([\w\s\(\)]+) found a deposit \(([\w\s\(\)]+)\) with a value of (\d+) PED! A record has been added to the Hall of Fame!"): (ChatType.GLOBAL, GlobalInstance, {"hof": True}),
-    re.compile(r"([\w\s\(\)]+) found a deposit \(([\w\s\(\)]+)\) with a value of (\d+) PED!"): (ChatType.GLOBAL, GlobalInstance, {}),
-    re.compile(r"([\w\s\(\)]+) killed a creature \(([\w\s\(\)]+)\) with a value of (\d+) PED at ([\s\w\W]+)!"): (ChatType.GLOBAL, GlobalInstance, {}),
+    re.compile(r"([\w\s\'\(\)]+) killed a creature \(([\w\s\(\)]+)\) with a value of (\d+) PED! A record has been added to the Hall of Fame!"): (ChatType.GLOBAL, GlobalInstance, {"hof": True}),
+    re.compile(r"([\w\s\'\(\)]+) killed a creature \(([\w\s\(\)]+)\) with a value of (\d+) PED!"): (ChatType.GLOBAL, GlobalInstance, {}),
+    re.compile(r"([\w\s\'\(\)]+) constructed an item \(([\w\s\(\)]+)\) worth (\d+) PED! A record has been added to the Hall of Fame!"): (ChatType.GLOBAL, GlobalInstance, {"hof": True}),
+    re.compile(r"([\w\s\'\(\)]+) constructed an item \(([\w\s\(\)]+)\) worth (\d+) PED!"): (ChatType.GLOBAL, GlobalInstance, {}),
+    re.compile(r"([\w\s\'\(\)]+) found a deposit \(([\w\s\(\)]+)\) with a value of (\d+) PED! A record has been added to the Hall of Fame!"): (ChatType.GLOBAL, GlobalInstance, {"hof": True}),
+    re.compile(r"([\w\s\'\(\)]+) found a deposit \(([\w\s\(\)]+)\) with a value of (\d+) PED!"): (ChatType.GLOBAL, GlobalInstance, {}),
+    re.compile(r"([\w\s\'\(\)]+) killed a creature \(([\w\s\(\)]+)\) with a value of (\d+) PED at ([\s\w\W]+)!"): (ChatType.GLOBAL, GlobalInstance, {}),
 }
 
 
