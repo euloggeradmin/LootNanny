@@ -70,6 +70,7 @@ class HuntingTrip(object):
 
         # Skillgains
         self.skillgains = defaultdict(int)
+        self.skillprocs = defaultdict(int)
 
         # Combat Stats
         self.total_attacks = 0
@@ -96,6 +97,7 @@ class HuntingTrip(object):
             },
             "loot": {k: {"c": v["c"], "v": str(v["v"])} for k, v in self.looted_items.items()},
             "skills": dict(self.skillgains),
+            "skillprocs": dict(self.skillprocs),
             "enhancers": dict(self.enhancer_breaks),
             "combat": {
                 "attacks": self.total_attacks,
@@ -159,6 +161,7 @@ class HuntingTrip(object):
 
     def add_skillgain_row(self, row: SkillRow):
         self.skillgains[row.skill] += row.amount
+        self.skillprocs[row.skill] += 1
 
     def add_enhancer_break_row(self, row: EnhancerBreakages):
         self.enhancer_breaks[row.type] += 1
@@ -235,10 +238,18 @@ class HuntingTrip(object):
         return Decimal(0.0)
 
     def get_skill_table_data(self):
-        d = {"Skill": [], "Value": []}
+        d = {"Skill": [], "Value": [], "Procs":[], "Proc %":[]}
         for k, v in sorted(self.skillgains.items(), key=lambda t: t[1], reverse=True):
             d["Skill"].append(k)
             d["Value"].append("%.4f" % v)
+        
+        # Get total procs during hunt
+        tp = sum(i[1] for i in sorted(self.skillprocs.items(), key=lambda t: t[1], reverse=True))
+        print("DEBUG - TP: " + str(tp))
+        for k, v in sorted(self.skillprocs.items(), key=lambda t: t[1], reverse=True):
+            print("DEBUG: K V - " + str(k) + " --- " + str(v))
+            d["Procs"].append(v)
+            d["Proc %"].append("{:.00%}".format(v/tp)) if tp != 0 else d["Proc %"].append("{:.00%}".format(0))
         return d
 
     def get_total_skill_gain(self):

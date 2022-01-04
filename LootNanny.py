@@ -354,7 +354,7 @@ class LootNanny(QWidget):
         self.total_skills_text = QLineEdit(enabled=False)
         form_inputs.addRow("Total Skill Gain:", self.total_skills_text)
 
-        table = SkillTableView({"Skill": [], "Value": []}, 40, 2)
+        table = SkillTableView({"Skill": [], "Value": [], "Proc": [], "Proc %": []}, 40, 4)
 
         # eulogger.skill_table = table
         layout.addLayout(form_inputs)
