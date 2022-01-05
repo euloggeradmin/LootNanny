@@ -245,9 +245,7 @@ class HuntingTrip(object):
         
         # Get total procs during hunt
         tp = sum(i[1] for i in sorted(self.skillprocs.items(), key=lambda t: t[1], reverse=True))
-        print("DEBUG - TP: " + str(tp))
         for k, v in sorted(self.skillprocs.items(), key=lambda t: t[1], reverse=True):
-            print("DEBUG: K V - " + str(k) + " --- " + str(v))
             d["Procs"].append(v)
             d["Proc %"].append("{:.00%}".format(v/tp)) if tp != 0 else d["Proc %"].append("{:.00%}".format(0))
         return d
@@ -345,7 +343,6 @@ class CombatModule(BaseModule):
                     self.active_run.add_combat_chat_row(chat_instance)
                     self.should_redraw_runs = True
                 elif isinstance(chat_instance, LootInstance):
-                    print(chat_instance)
                     self.active_run.add_loot_instance_chat_row(chat_instance)
                     self.should_redraw_runs = True
                 elif isinstance(chat_instance, EnhancerBreakages):
