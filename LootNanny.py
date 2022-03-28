@@ -22,6 +22,7 @@ try:
     from windows.streamer import StreamerWindow
     from views.twitch import TwitchTab
     from modules.combat import MarkupSingleton
+    from views.crafting import CraftingTab
 except Exception as e:
     log_crash(e)
 
@@ -60,6 +61,8 @@ class LootNanny(QWidget):
         tabs.addTab(self.skillTabUI(), "Skills")
         tabs.addTab(self.combatTabUI(), "Combat")
         self.twitch = TwitchTab(self, self.config)
+        self.crafting = CraftingTab(self)
+        tabs.addTab(self.crafting, "Crafting")
         tabs.addTab(self.twitch, "Twitch")
 
         tabs.addTab(self.config_tab, "Config")
@@ -210,7 +213,7 @@ class LootNanny(QWidget):
         hofs = QLineEdit(enabled=False)
         form_inputs.addRow("HOFs:", hofs)
 
-        self.item_table = LootTableView({"Item": [], "Value": [], "Count": [], "Markup": [], "Total Value": []}, 30, 5)
+        self.item_table = LootTableView({"Item": [], "Value": [], "Count": [], "Markup": [], "Total Value": []}, 100, 5)
         self.runs = RunsView({"Notes": [], "Start": [], "End": [], "Spend": [], "Enhancers": [],
                          "Extra Spend": [], "Return": [], "%": [], "mu%": []}, 40, 9)
         self.runs.itemClicked.connect(self.onLootTableClicked)

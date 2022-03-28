@@ -68,14 +68,17 @@ class EnhancerBreakages(BaseChatRow):
 
 
 class LootInstance(BaseChatRow):
+    CUSTOM_VALUES = {
+        "Shrapnel": Decimal("0.0001")
+    }
 
     def __init__(self, name, amount, value):
         super().__init__()
         self.name = name
         self.amount = int(amount)
 
-        if name == "Shrapnel":
-            self.value = Decimal(amount) / 10000
+        if name in self.CUSTOM_VALUES:
+            self.value = Decimal(amount) * self.CUSTOM_VALUES[name]
         else:
             self.value = Decimal(value)
 

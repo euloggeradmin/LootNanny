@@ -97,3 +97,19 @@ class WeaponTable(BaseTableView):
         header.setSectionResizeMode(6, QHeaderView.ResizeToContents)
 
         self.setSelectionBehavior(QAbstractItemView.SelectRows)
+
+
+class CraftingTableView(BaseTableView):
+    COLUMNS = ("Resource", "Per Click", "Total", "TT Cost", "Markup", "Total Cost")
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        header = self.horizontalHeader()
+        header.setSectionResizeMode(0, QHeaderView.Stretch)
+        header.setSectionResizeMode(1, QHeaderView.Stretch)
+        header.setSectionResizeMode(2, QHeaderView.Stretch)
+        header.setSectionResizeMode(3, QHeaderView.Stretch)
+        header.setSectionResizeMode(4, QHeaderView.Stretch)
+        header.setSectionResizeMode(5, QHeaderView.Stretch)
+
+        self.setSelectionBehavior(QAbstractItemView.SelectRows)

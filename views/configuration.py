@@ -196,7 +196,7 @@ class ConfigTab(QWidget):
         weapon = ALL_WEAPONS[loadout.weapon]
         amp = ALL_ATTACHMENTS.get(loadout.amp)
         ammo = weapon["ammo"] * (1 + (0.1 * loadout.damage_enh))
-        decay = weapon["decay"] * Decimal(1 + (0.1 * loadout.accuracy_enh))
+        decay = weapon["decay"] * Decimal(1 + (0.1 * loadout.damage_enh))
         if amp:
             ammo += amp["ammo"]
             decay += amp["decay"]

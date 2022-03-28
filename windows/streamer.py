@@ -99,14 +99,14 @@ class StreamerWindow(QWidget):
     def set_text_from_module(self, combat_module: "CombatModule"):
         self.set_text_from_data(
             combat_module.active_run.loot_instances,
-            combat_module.active_run.total_cost,
+            combat_module.active_run.total_cost + combat_module.active_run.extra_spend,
             combat_module.active_run.tt_return,
             combat_module.active_run.hofs,
             combat_module.active_run.globals,
             combat_module.active_run.dpp,
             combat_module.active_run.total_return_mu,
             combat_module.active_run.total_return_mu_perc,
-            combat_module.active_run.total_return_mu - combat_module.active_run.total_cost
+            combat_module.active_run.total_return_mu - (combat_module.active_run.total_cost - combat_module.active_run.extra_spend)
         )
 
     def set_text_from_data(self, loots, cost, returns, hofs, globals, dpp, total_returns, total_return_mu_perc, profit):

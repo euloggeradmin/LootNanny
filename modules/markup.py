@@ -40,6 +40,17 @@ class MarkupStore(object):
 
     def get_markup_for_item(self, name):
         if name not in self._data:
+            # Asynchronously fetch markup data from Wiki Bot
+            #response = requests.get("https://api.markupbot.com/markup/{}".format(name))
+            # Will hopefully look something like:
+            # {
+            #    "day": {"rate": "101.00%", "volume": "100.0"},
+            #    "week": {"rate": "101.00%", "volume": "100.0"},
+            #    "month": {"rate": "101.00%", "volume": "100.0"},
+            #    "year": {"rate": "101.00%", "volume": "100.0"},
+            #    "decade": {"rate": "101.00%", "volume": "100.0"},
+            #}
+            #return Markup(response["month"]["rate"], False)
             return DEFAULT_NULL_MARKUP
         else:
             return self._data[name]
@@ -54,4 +65,17 @@ class MarkupStore(object):
                 markup = Markup(Decimal(value), False)
         self._data[name] = markup
         self.save_markup()
-        print(self._data)
+
+    def get_formatted_markup(self, name):
+        mu = self.get_markup_for_item(name)
+        if mu.is_absolute:
+            return "+{:.3f}".format(mu.value)
+        else:
+            return "{:.3f}%".format(mu.value * 100)
+
+    def apply_markup_to_item(self, name, count: int, value: Decimal):
+        mu = self.get_markup_for_item(name)
+        if mu.is_absolute:
+            return value + (count * mu.value)
+        else:
+            return value * mu.value

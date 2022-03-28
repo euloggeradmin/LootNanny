@@ -15,7 +15,8 @@ from ocr import screenshot_window
 from modules.markup import MarkupStore
 
 
-SAVE_FILENAME = format_filename("runs.json")
+RUNS_FILE = format_filename("runs.json")
+RUNS_DIRECTORY = format_filename("")
 MarkupSingleton = MarkupStore()
 
 
@@ -33,7 +34,7 @@ def take_screenshot(delay_ms, directory, glob: GlobalInstance):
     im.save(screenshot_fullpath)
 
 
-Loadout = namedtuple("Loadout", ["weapon", "amp", "sight_1", "sight_2", "scope", "damage_enh", "accuracy_enh"])
+Loadout = namedtuple("Loadout", ["weapon", "amp", "scope", "sight_1", "sight_2", "damage_enh", "accuracy_enh"])
 
 
 class HuntingTrip(object):
@@ -50,6 +51,7 @@ class HuntingTrip(object):
         self.globals = 0
         self.hofs = 0
         self.total_cost = 0
+        self.cached_total_return_mu = Decimal("0.0")
 
         self.last_loot_instance = None
         self.loot_instances = 0
@@ -92,9 +94,10 @@ class HuntingTrip(object):
                 "globals": self.globals,
                 "hofs": self.hofs,
                 "loots": self.loot_instances,
-                "adj_cost": str(self.adjusted_cost)
+                "adj_cost": str(self.adjusted_cost),
+                "cached_mu_return": str(self.total_return_mu)
             },
-            "loot": {k: {"c": v["c"], "v": str(v["v"])} for k, v in self.looted_items.items()},
+            "loot": {k: {"c": str(v["c"]), "v": str(v["v"])} for k, v in self.looted_items.items()},
             "skills": dict(self.skillgains),
             "enhancers": dict(self.enhancer_breaks),
             "combat": {
@@ -110,7 +113,7 @@ class HuntingTrip(object):
         }
 
     @classmethod
-    def from_seralized(cls, seralized):
+    def from_seralized(cls, seralized, include_loot=False):
         inst = cls(ts_to_dt(seralized["start"]), Decimal(seralized["config"]["cps"]))
         inst.notes = seralized.get("notes", "")
 
@@ -120,6 +123,7 @@ class HuntingTrip(object):
         # loot
         inst.tt_return = Decimal(seralized["summary"]["tt_return"])
         inst.extra_spend = Decimal(seralized["summary"].get("extra_spend", "0.0"))
+        inst.cached_total_return_mu = Decimal(seralized["summary"].get("cached_mu_return", "0.0"))
         inst.globals = seralized["summary"]["globals"]
         inst.hofs = seralized["summary"]["hofs"]
         inst.loot_instances = seralized["summary"]["loots"]
@@ -138,8 +142,9 @@ class HuntingTrip(object):
         inst.total_misses = seralized["combat"]["misses"]
 
         # graphs
-        inst.return_over_time = seralized["graphs"]["returns"]
-        inst.multipliers = seralized["graphs"]["multis"]
+        if include_loot:
+            inst.return_over_time = seralized["graphs"]["returns"]
+            inst.multipliers = seralized["graphs"]["multis"]
 
         for k, v in seralized["enhancers"].items():
             inst.enhancer_breaks[k] = v
@@ -147,10 +152,25 @@ class HuntingTrip(object):
         for k, v in seralized["skills"].items():
             inst.skillgains[k] = v
 
-        for k, v in seralized["loot"].items():
-            inst.looted_items[k] = {"c": v["c"], "v": Decimal(v["v"])}
+        if include_loot:
+            for k, v in seralized["loot"].items():
+                inst.looted_items[k] = {"c": v["c"], "v": Decimal(v["v"])}
 
         return inst
+
+    @classmethod
+    def load_from_filename(cls, fn, include_loot=False):
+        with open(format_filename(fn), 'r') as f:
+            content = f.read()
+        return cls.from_seralized(json.loads(content), include_loot=include_loot)
+
+    @property
+    def filename(self):
+        return format_filename(f"LootNannyLog_{dt_to_ts(self.time_start)}.json")
+
+    def save_to_disk(self):
+        with open(self.filename, 'w') as f:
+            f.write(json.dumps(self.serialize_run()))
 
     @property
     def duration(self):
@@ -231,7 +251,7 @@ class HuntingTrip(object):
     @property
     def dpp(self):
         if self.total_cost > Decimal(0):
-            return Decimal(self.total_damage) / Decimal(self.total_cost + self.extra_spend * 100)
+            return Decimal(self.total_damage) / (Decimal(self.total_cost + self.extra_spend) * 100)
         return Decimal(0.0)
 
     def get_skill_table_data(self):
@@ -269,6 +289,8 @@ class HuntingTrip(object):
     @property
     def total_return_mu(self):
         total_return_mu = Decimal("0.0")
+        if len(self.looted_items) == 0:
+            total_return_mu = self.cached_total_return_mu
         for k, v in self.looted_items.items():
             mu = MarkupSingleton.get_markup_for_item(k)
             if mu.is_absolute:
@@ -279,7 +301,7 @@ class HuntingTrip(object):
 
     @property
     def total_return_mu_perc(self):
-        if (self.total_cost + self.extra_spend):
+        if self.total_cost + self.extra_spend:
             return self.total_return_mu / (self.total_cost + self.extra_spend) * 100
         else:
             return Decimal("0.0")
@@ -409,6 +431,7 @@ class CombatModule(BaseModule):
         self.loot_fields["hofs"].setText(str(self.active_run.hofs))
 
         self.loot_table.setData(self.active_run.get_item_loot_table_data())
+        self.loot_table.resizeRowsToContents()
         self.update_runs_table()
 
     def update_runs_table(self):
@@ -464,28 +487,44 @@ class CombatModule(BaseModule):
         if not self.active_run:
             if not force:
                 return
-        for run in self.runs:
-            serialized = run.serialize_run()
-            all_runs.append(serialized)
-        with open(SAVE_FILENAME, 'w') as f:
-            f.write(json.dumps(all_runs))
+        self.active_run.save_to_disk()
 
     def load_runs(self):
-        if not os.path.exists(SAVE_FILENAME):
+        if os.path.exists(RUNS_FILE):
+            # Old system of saving runs, need to migrate
+            migrate_runs()
+
+            os.remove(RUNS_FILE)
+
+            time.sleep(5)
+
+        if not os.path.exists(RUNS_DIRECTORY):
             return
 
-        with open(SAVE_FILENAME, 'r') as f:
-            try:
-                raw_data = f.read()
-                data = json.loads(raw_data)
-            except:
-                print("Corrpted Runs File Detected")
-                print(raw_data)
-                data = {}
+        run_files = []
 
-        for run_data in data:
-            run = HuntingTrip.from_seralized(run_data)
+        for fn in os.listdir(RUNS_DIRECTORY):
+            if fn.startswith("LootNannyLog_"):
+                run_files.append(fn)
+
+        for i, run_fn in enumerate(run_files, 1):
+            run = HuntingTrip.load_from_filename(run_fn, include_loot=(i == len(run_files)))
             self.runs.append(run)
 
         if self.runs:
             self.active_run = self.runs[-1]
+
+
+def migrate_runs():
+    with open(RUNS_FILE, 'r') as f:
+        try:
+            raw_data = f.read()
+            data = json.loads(raw_data)
+        except:
+            print("Corrpted Runs File Detected")
+            print(raw_data)
+            data = {}
+
+    for run_data in data:
+        run = HuntingTrip.from_seralized(run_data)
+        run.save_to_disk()
