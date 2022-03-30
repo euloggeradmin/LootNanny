@@ -8,8 +8,8 @@ from modules.crafting import Slot, Blueprint
 
 ALL_RESOURCES = {}
 ALL_BLUEPRINTS = {}
-bp_filename = "crafting.json"  # resource_path("crafting.json")
-res_filename = "resources.json"  # resource_path("resources.json")
+bp_filename = resource_path("crafting.json")
+res_filename = resource_path("resources.json")
 
 if os.path.exists(bp_filename):
     with open(bp_filename, 'r') as f:

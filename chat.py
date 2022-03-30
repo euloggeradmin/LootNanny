@@ -118,6 +118,7 @@ REGEXES = {
     re.compile("You healed yourself (\d+\.\d+) points"): (ChatType.HEAL, HealRow, {}),
     re.compile("Damage deflected!"): (ChatType.DEFLECT, BaseChatRow, {}),
     re.compile("You Evaded the attack"): (ChatType.EVADE, BaseChatRow, {}),
+    re.compile("You missed"): (ChatType.DODGE, CombatRow, {"miss": True}),
     re.compile("The target Dodged your attack"): (ChatType.DODGE, CombatRow, {"miss": True}),
     re.compile("The target Evaded your attack"): (ChatType.DODGE, CombatRow, {"miss": True}),
     re.compile("The target Jammed your attack"): (ChatType.DODGE, CombatRow, {"miss": True}),
