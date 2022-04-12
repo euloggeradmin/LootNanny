@@ -24,8 +24,10 @@ class CraftingTab(QWidget):
         self.total_clicks = 1
         self.total_tt_cost = Decimal("0.0")
         self.total_cost = Decimal("0.0")
+        self.max_tt = Decimal("100.00")
 
         self.use_residue = False
+        self.one_item_per_success = False
         self.residue_markup = Decimal("1.02")
 
         self.blueprint_table_selected_row = None
@@ -62,6 +64,15 @@ class CraftingTab(QWidget):
         self.use_residue_check.setChecked(self.use_residue)
         self.use_residue_check.toggled.connect(self.use_residue_toggled)
         form_inputs.addRow("Use Residue:", self.use_residue_check)
+
+        self.one_item_per_success_check = QCheckBox()
+        self.one_item_per_success_check.setChecked(self.one_item_per_success)
+        self.one_item_per_success_check.toggled.connect(self.one_item_per_success_check_toggled)
+        form_inputs.addRow("OVERRIDE: 1 Item Per Success:", self.one_item_per_success_check)
+
+        self.item_max_tt = QLineEdit(text="100.00", enabled=True)
+        form_inputs.addRow("Item Max TT:", self.item_max_tt)
+        self.item_max_tt.textChanged.connect(self.item_max_tt_text_changed)
 
         self.residue_markup_text = QLineEdit(text="102%", enabled=True)
         form_inputs.addRow("Residue Markup:", self.residue_markup_text)
@@ -109,12 +120,20 @@ class CraftingTab(QWidget):
         layout.addStretch()
         self.setLayout(layout)
 
+    def one_item_per_success_check_toggled(self):
+        self.one_item_per_success = self.one_item_per_success_check.isChecked()
+        self.calculate_crafting_totals()
+
     def use_residue_toggled(self):
         self.use_residue = self.use_residue_check.isChecked()
         self.calculate_crafting_totals()
 
     def residue_markup_text_changed(self):
         self.residue_markup = Decimal(self.residue_markup_text.text().replace("%", "")) / 100
+        self.calculate_crafting_totals()
+
+    def item_max_tt_text_changed(self):
+        self.max_tt = Decimal(self.item_max_tt.text())
         self.calculate_crafting_totals()
 
     def get_selected_item_name(self):
@@ -165,16 +184,31 @@ class CraftingTab(QWidget):
                                                                         slot.count,
                                                                         slot.count * ALL_RESOURCES[slot.name]) * self.total_clicks
 
-        exp_successes = int(self.total_clicks * 0.42)
-        actual_item_tt = (self.total_tt_cost * Decimal("0.5"))
+        average_input_markup = self.total_cost / self.total_tt_cost
+
+        expected_successes = int(self.total_clicks * 0.42)
+
+        # Calculate total TT of successes
+        if self.one_item_per_success:
+            item_name = self.get_selected_item_name()
+            if item_name in ALL_RESOURCES:
+                item_tt_value = ALL_RESOURCES[item_name]
+            else:
+                item_tt_value = self.max_tt
+            actual_item_tt = expected_successes * item_tt_value
+            extra_residues = (self.total_tt_cost * Decimal("0.5")) - actual_item_tt
+        else:
+            actual_item_tt = (self.total_tt_cost * Decimal("0.5"))
+            extra_residues = Decimal("0.0")
+
         residue_costs = Decimal("0.0")
         required_residue = Decimal("0.0")
         if self.use_residue:
-            TOTAL_TT = Decimal(74)
-            required_residue = (TOTAL_TT * exp_successes) - (self.total_tt_cost * Decimal("0.5"))
+            required_residue = (self.max_tt * expected_successes) - (self.total_tt_cost * Decimal("0.5"))
             residue_costs = required_residue * self.residue_markup
             self.residue_required_text.setText("{:.2f} PED".format(required_residue))
-            actual_item_tt = TOTAL_TT * exp_successes
+            actual_item_tt = self.max_tt * expected_successes
+
 
         self.total_cost += self.total_clicks * Decimal("0.01") * MarkupSingleton.get_markup_for_item(self.selected_blueprint).value
         self.total_tt_cost_text.setText("%.2f" % (self.total_tt_cost + required_residue) + " PED")
@@ -183,19 +217,22 @@ class CraftingTab(QWidget):
         # Set Calculated Totals
         item = self.get_selected_item_name()
 
-        self.exepcted_successes.setText(str(exp_successes))
-        self.tt_as_final_item.setText("%.2f" % (self.total_tt_cost * Decimal("0.5")) + " PED")
-        self.expected_near_success_text.setText("%.2f" % (self.total_tt_cost * Decimal("0.45")) + " PED")
+        self.exepcted_successes.setText(str(expected_successes))
+        self.tt_as_final_item.setText("%.2f" % (actual_item_tt) + " PED")
 
+        near_success_tt = (self.total_tt_cost * Decimal("0.45"))
+        near_success_markup = (Decimal("0.4") * near_success_tt * average_input_markup) + (Decimal("0.6") * near_success_tt)
+
+        self.expected_near_success_text.setText("%.2f" % (near_success_tt + extra_residues) + " PED")
 
         mu = MarkupSingleton.get_markup_for_item(item)
         if mu.is_absolute:
-            expected = (self.total_tt_cost * Decimal("0.95")) + Decimal(exp_successes * mu.value)
+            expected = actual_item_tt + near_success_markup + Decimal(expected_successes * mu.value)
         else:
-            expected = (actual_item_tt * mu.value) + (self.total_tt_cost * Decimal("0.45"))
+            expected = (actual_item_tt * mu.value) + near_success_markup + extra_residues
         self.expected_return.setText("%.2f" % expected + " PED")
 
-        delta = (self.total_cost + residue_costs) - (self.total_tt_cost * Decimal("0.45"))
+        delta = (self.total_cost + residue_costs) - (near_success_markup + extra_residues)
 
         if mu.is_absolute:
             try:

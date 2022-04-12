@@ -97,7 +97,7 @@ class LootNanny(QWidget):
 
         statusBar.addWidget(self.theme_btn)
 
-
+        self.combat_module.load_runs()
         layout.addWidget(statusBar)
 
         self.initialize_from_config()
@@ -139,6 +139,8 @@ class LootNanny(QWidget):
             self.logging_pause_btn.setEnabled(False)
             self.logging_pause_btn.setText("Pause Logging")
             self.logging_pause_btn.setStyleSheet("background-color: grey: color; white;")
+            self.combat_module.save_active_run(force=True)
+            self.combat_module.update_tables()
         else:
             self.combat_module.is_logging = True
             self.combat_module.is_paused = False
@@ -153,10 +155,12 @@ class LootNanny(QWidget):
             self.combat_module.is_paused = False
             self.logging_pause_btn.setStyleSheet("background-color: green")
             self.logging_pause_btn.setText("Pause Logging")
+            self.combat_module.save_active_run(force=True)
         else:
             self.combat_module.is_paused = True
             self.logging_pause_btn.setStyleSheet("background-color: red")
             self.logging_pause_btn.setText("Unpause Logging")
+            self.combat_module.save_active_run(force=True)
 
     def on_tick(self):
         global TICK_COUNTER
@@ -164,7 +168,6 @@ class LootNanny(QWidget):
             TICK_COUNTER += 1
             if not TICK_COUNTER % 5:
                 TICK_COUNTER %= 5
-                self.combat_module.save_runs()
 
             self.chat_reader.delay_start_reader()
 
@@ -442,6 +445,8 @@ class LootNanny(QWidget):
         self.save_config()
 
     def closeEvent(self, event):
+        print("Close Event")
+        self.combat_module.save_active_run(force=True)
         if self.streamer_window:
             self.streamer_window.close()
         if self.twitch.twitch_bot:

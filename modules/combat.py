@@ -154,7 +154,7 @@ class HuntingTrip(object):
 
         if include_loot:
             for k, v in seralized["loot"].items():
-                inst.looted_items[k] = {"c": v["c"], "v": Decimal(v["v"])}
+                inst.looted_items[k] = {"c": int(v["c"]), "v": Decimal(v["v"])}
 
         return inst
 
@@ -338,8 +338,6 @@ class CombatModule(BaseModule):
         self.multiplier_graph = None
         self.return_graph = None
 
-        self.load_runs()
-
     def update_active_run_cost(self):
         if self.active_run:
             cost = Decimal(self.ammo_burn) / Decimal(10000) + self.decay
@@ -356,7 +354,6 @@ class CombatModule(BaseModule):
                     self.active_run.add_combat_chat_row(chat_instance)
                     self.should_redraw_runs = True
                 elif isinstance(chat_instance, LootInstance):
-                    print(chat_instance)
                     self.active_run.add_loot_instance_chat_row(chat_instance)
                     self.should_redraw_runs = True
                 elif isinstance(chat_instance, EnhancerBreakages):
@@ -476,18 +473,21 @@ class CombatModule(BaseModule):
             else:
                 d["%"].append("%")
                 d["mu%"].append("%")
+        print(d)
         return d
 
     def create_new_run(self):
         self.active_run = HuntingTrip(datetime.now(), Decimal(self.ammo_burn) / Decimal(10000) + self.decay)
         self.runs.append(self.active_run)
 
-    def save_runs(self, force=False):
-        all_runs = []
+    def save_active_run(self, force=False):
         if not self.active_run:
             if not force:
                 return
-        self.active_run.save_to_disk()
+            if self.runs:
+                self.runs[-1].save_to_disk()
+        else:
+            self.active_run.save_to_disk()
 
     def load_runs(self):
         if os.path.exists(RUNS_FILE):
@@ -505,14 +505,22 @@ class CombatModule(BaseModule):
 
         for fn in os.listdir(RUNS_DIRECTORY):
             if fn.startswith("LootNannyLog_"):
-                run_files.append(fn)
+                try:
+                    with open(format_filename(fn), 'r') as f:
+                        json.loads(f.read())
+                    run_files.append(fn)
+                except:
+                    os.remove(format_filename(fn))
 
         for i, run_fn in enumerate(run_files, 1):
             run = HuntingTrip.load_from_filename(run_fn, include_loot=(i == len(run_files)))
             self.runs.append(run)
 
         if self.runs:
-            self.active_run = self.runs[-1]
+            if self.runs[-1].time_end is None:
+                self.active_run = self.runs[-1]
+            else:
+                self.update_runs_table()
 
 
 def migrate_runs():
