@@ -13,3 +13,12 @@ pyinstaller.exe LootNanny.spec
 ```
 
 This will generate the latest release executable in the dist/ folder.
+
+## Additional Notes / known bugs
+
+* If building with a **Virtual Environment**, ensure your `env\Lib\site-packages` directory is on your `PYTHONPATH` environment variable
+
+* If you encounter `PermissionError: [WinError 5] Access is denied` errors when building via `pyinstaller`, build using an elevated command prompt ( Run as Administrator )
+
+## LootNanny Setup Instructions
+[Click here for a quick setup guide](docs/SETUP.MD)
