@@ -13,6 +13,9 @@ class BaseTableView(QTableWidget):
 
         self.resizeRowsToContents()
 
+        self.clipboard = QApplication.clipboard()
+        self.clipboard.clear()
+
     def setData(self, data):
         self.data = data
         horHeaders = []
@@ -22,6 +25,44 @@ class BaseTableView(QTableWidget):
                 newitem = QTableWidgetItem(str(item))
                 self.setItem(m, n, newitem)
         self.setHorizontalHeaderLabels(horHeaders)
+
+    def keyPressEvent(self, event):
+        super().keyPressEvent(event)
+        # If table cells are copied via CTRL+C, we should copy them to the clipboard
+        # in a format that is readable via most spreadsheets ( tab deliniated )
+        if event.key() == QtCore.Qt.Key_C and (event.modifiers() & QtCore.Qt.ControlModifier):
+            clipdata = []
+            rowdata = []
+            selected_rows = set([])
+            current_row = None
+            
+            # Get a list of selected rows
+            for index in self.selectedIndexes():
+                selected_rows.add(index.row())
+            
+            # Append the headers
+            for header in self.COLUMNS:
+                rowdata.append(header)
+            clipdata.append('\t'.join(rowdata))
+            rowdata = []
+
+            # Add all cells from the selected rows to the copy data
+            # Note: We can't just loop through selectedIndexes because 
+            # QAbstractItemView.SelectRows does not select empty cells
+            for row in selected_rows:
+                i = 0
+                while i <= len(self.COLUMNS):
+                    try:
+                        cell_data = self.item(row,i).text()
+                    except:
+                        cell_data = ""
+                    rowdata.append(cell_data)
+                    i += 1
+                clipdata.append('\t'.join(rowdata))
+                rowdata = []
+
+            # Add the data to the clipboard
+            self.clipboard.setText('\r\n'.join(clipdata))
 
 
 class RunsView(BaseTableView):
@@ -69,6 +110,8 @@ class SkillTableView(BaseTableView):
         header.setSectionResizeMode(0, QHeaderView.Stretch)
         header.setSectionResizeMode(1, QHeaderView.Stretch)
 
+        self.setSelectionBehavior(QAbstractItemView.SelectRows)
+
 
 class EnhancerTableView(BaseTableView):
     COLUMNS = ("Enhancer", "Breaks")
@@ -78,6 +121,8 @@ class EnhancerTableView(BaseTableView):
         header = self.horizontalHeader()
         header.setSectionResizeMode(0, QHeaderView.Stretch)
         header.setSectionResizeMode(1, QHeaderView.Stretch)
+
+        self.setSelectionBehavior(QAbstractItemView.SelectRows)
 
 
 class WeaponTable(BaseTableView):
