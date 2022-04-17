@@ -18,9 +18,10 @@ class BaseTableView(QTableWidget):
         horHeaders = []
         for n, key in enumerate(self.COLUMNS):
             horHeaders.append(key)
-            for m, item in enumerate(data[key]):
-                newitem = QTableWidgetItem(str(item))
-                self.setItem(m, n, newitem)
+            if key in data:
+                for m, item in enumerate(data[key]):
+                    newitem = QTableWidgetItem(str(item))
+                    self.setItem(m, n, newitem)
         self.setHorizontalHeaderLabels(horHeaders)
 
 
@@ -61,13 +62,15 @@ class LootTableView(BaseTableView):
 
 
 class SkillTableView(BaseTableView):
-    COLUMNS = ("Skill", "Value")
+    COLUMNS = ("Skill", "Value", "Procs", "Proc %")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         header = self.horizontalHeader()
         header.setSectionResizeMode(0, QHeaderView.Stretch)
         header.setSectionResizeMode(1, QHeaderView.Stretch)
+        header.setSectionResizeMode(2, QHeaderView.Stretch)
+        header.setSectionResizeMode(3, QHeaderView.Stretch)
 
 
 class EnhancerTableView(BaseTableView):
