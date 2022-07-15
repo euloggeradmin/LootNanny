@@ -2009,11 +2009,16 @@
     "decay": "0.00011",
     "type": "Rifle"
   },
-  "Camo Arms Desert Stalker": {
+  "Camo Arms BGH": {
+    "ammo": 4300,
+    "decay": "0.01",
+    "type": "Rifle"
+  },
+   "Camo Arms Desert Stalker": {
     "ammo": 2000,
     "decay": "0.040",
     "type": "Rifle"
-  },
+   },
   "Camo Arms Jungle Stalker": {
     "ammo": 2000,
     "decay": "0.027",
