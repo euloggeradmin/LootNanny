@@ -2014,6 +2014,11 @@
     "decay": "0.040",
     "type": "Rifle"
   },
+  "Camo Arms BGH": {
+    "ammo": 4300,
+    "decay": "0.010",
+    "type": "Rifle"
+  },
   "Camo Arms Jungle Stalker": {
     "ammo": 2000,
     "decay": "0.027",
@@ -3381,7 +3386,7 @@
   },
   "DOA Mayhem Foeripper, Augmented": {
     "ammo": 1890,
-    "decay": "0.0099",
+    "decay": "0.00738",
     "type": "Carbine"
   },
   "DOA Rockjacker": {

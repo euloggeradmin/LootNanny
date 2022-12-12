@@ -9,7 +9,7 @@ from PyQt5.QtWidgets import QFileDialog, QTextEdit, QFormLayout, QHBoxLayout, QH
 from data.weapons import ALL_WEAPONS
 from data.sights_and_scopes import SIGHTS, SCOPES
 from data.attachments import ALL_ATTACHMENTS
-from modules.combat import Loadout
+from modules.combat import Loadout, CustomWeapon
 from utils.tables import WeaponTable
 
 
@@ -24,6 +24,8 @@ class ConfigTab(QWidget):
 
         form_inputs = QFormLayout()
         # Add widgets to the layout
+
+        self.refresh_custom_weapons()
 
         # Chat Location
         self.chat_location_text = QLineEdit(text=self.app.config.location.ui_value)
@@ -58,6 +60,10 @@ class ConfigTab(QWidget):
         self.add_weapon_btn = QPushButton("Add Weapon Loadout")
         self.add_weapon_btn.released.connect(self.add_new_weapon)
         form_inputs.addWidget(self.add_weapon_btn)
+
+        self.create_weapon_btn = QPushButton("Create Weapon")
+        self.create_weapon_btn.released.connect(self.create_weapon)
+        form_inputs.addWidget(self.create_weapon_btn)
 
         self.active_loadout = QLineEdit(text="", enabled=False)
         form_inputs.addRow("Active Loadout:", self.active_loadout)
@@ -109,6 +115,15 @@ class ConfigTab(QWidget):
         if not os.path.exists(os.path.expanduser(self.screenshot_directory)):
             os.makedirs(os.path.expanduser(self.screenshot_directory))
 
+    def refresh_custom_weapons(self):
+        for custom_weapon in self.app.config.custom_weapons.value:
+            custom_weapon = CustomWeapon(*custom_weapon)
+            ALL_WEAPONS[f"!CUSTOM - {custom_weapon.weapon}"] = {
+                "type": "custom",
+                "decay": Decimal(custom_weapon.decay),
+                "ammo": custom_weapon.ammo_burn
+            }
+
     def weapon_table_selected(self):
         indexes = self.weapons.selectionModel().selectedRows()
         if not indexes:
@@ -149,6 +164,7 @@ class ConfigTab(QWidget):
         return d
 
     def redraw_weapons(self):
+        self.refresh_custom_weapons()
         self.weapons.clear()
         self.weapons.setData(self.loadout_to_data())
 
@@ -160,12 +176,29 @@ class ConfigTab(QWidget):
             self.set_stylesheet(weapon_popout, "dark.qss")
         self.add_weapon_btn.setEnabled(False)
 
+    def create_weapon(self):
+        create_weapon_popout = CreateWeaponPopOut(self)
+        if self.app.config.theme == "light":
+            self.set_stylesheet(create_weapon_popout, "light.qss")
+        else:
+            self.set_stylesheet(create_weapon_popout, "dark.qss")
+        self.create_weapon_btn.setEnabled(False)
+
     def add_weapon_cancled(self):
         self.add_weapon_btn.setEnabled(True)
 
+    def create_weapon_canceled(self):
+        self.create_weapon_btn.setEnabled(True)
+
     def on_added_weapon(self, weapon: str, amp: str, scope: str, sight_1: str, sight_2: str, d_enh: int, a_enh: int):
+        print("Adding", weapon, )
         new_loadout = Loadout(weapon, amp, scope, sight_1, sight_2, d_enh, a_enh)
         self.app.config.loadouts.value.append(new_loadout)
+        self.app.config.save()
+        self.redraw_weapons()
+
+    def on_created_weapon(self, weapon: str, decay: Decimal, ammo_burn: int):
+        self.app.config.custom_weapons.value.append(CustomWeapon(weapon, decay, ammo_burn))
         self.app.config.save()
         self.redraw_weapons()
 
@@ -279,6 +312,7 @@ class WeaponPopOut(QWidget):
         self.weapon_option.addItems(sorted(ALL_WEAPONS))
         form_inputs.addRow("Weapon:", self.weapon_option)
         self.weapon_option.currentIndexChanged.connect(self.on_field_changed)
+        self.weapon = self.weapon_option.currentText()
 
         self.amp_option = QComboBox()
         self.amp_option.addItems(["Unamped"] + sorted(ALL_ATTACHMENTS))
@@ -330,6 +364,8 @@ class WeaponPopOut(QWidget):
         self.close()
 
     def confirm(self):
+        if not self.weapon:
+            self.close()
         self.parent.on_added_weapon(
             self.weapon,
             self.amp,
@@ -352,6 +388,94 @@ class WeaponPopOut(QWidget):
 
         self.damage_enhancers_txt.setText(str(self.damage_enhancers))
         self.accuracy_enhancers_txt.setText(str(self.accuracy_enhancers))
+
+    def mousePressEvent(self, event):
+        self.oldPos = event.globalPos()
+
+    def mouseMoveEvent(self, event):
+        delta = QPoint (event.globalPos() - self.oldPos)
+        self.move(self.x() + delta.x(), self.y() + delta.y())
+        self.oldPos = event.globalPos()
+
+    def closeEvent(self, event):
+        event.accept()  # let the window close
+
+
+class CreateWeaponPopOut(QWidget):
+    def __init__(self, parent: ConfigTab):
+        super().__init__()
+
+        self.parent = parent
+
+        # this will hide the title bar
+        self.setWindowFlag(Qt.FramelessWindowHint)
+        self.setWindowFlag(Qt.WindowStaysOnTopHint)
+
+        # set the title
+        self.setWindowTitle("Add Weapon")
+
+        # setting  the geometry of window
+        self.setGeometry(100, 100, 340, 100)
+
+        self.layout = self.create_widgets()
+        self.resize_to_contents()
+
+        self.show()
+
+    def resize_to_contents(self):
+        self.setFixedSize(self.layout.sizeHint())
+
+    def create_widgets(self):
+        layout = QVBoxLayout()
+        self.setLayout(layout)
+
+        form_inputs = QFormLayout()
+
+        self.weapon_name_txt = QLineEdit(text="<Item Name>")
+        form_inputs.addRow("Weapon Name:", self.weapon_name_txt)
+        self.weapon_name_txt.editingFinished.connect(self.on_field_changed)
+
+        self.ammo_burn_txt = QLineEdit(text="0")
+        form_inputs.addRow("Ammo Burn:", self.ammo_burn_txt)
+        self.ammo_burn_txt.editingFinished.connect(self.on_field_changed)
+
+        self.decay_txt = QLineEdit(text="0.0")
+        form_inputs.addRow("Decay (PED):", self.decay_txt)
+        self.decay_txt.editingFinished.connect(self.on_field_changed)
+        layout.addLayout(form_inputs)
+
+        h_layout = QHBoxLayout()
+
+        cancel = QPushButton("Cancel")
+        cancel.released.connect(self.cancel)
+
+        confirm = QPushButton("Confirm")
+        confirm.released.connect(self.confirm)
+
+        h_layout.addWidget(cancel)
+        h_layout.addWidget(confirm)
+
+        layout.addLayout(h_layout)
+
+        layout.addStretch()
+        return layout
+
+    def cancel(self):
+        self.parent.create_weapon_canceled()
+        self.close()
+
+    def confirm(self):
+        self.parent.on_created_weapon(
+            self.name,
+            self.weapon_decay,
+            self.weapon_burn
+        )
+        self.close()
+
+    def on_field_changed(self):
+        self.name = self.weapon_name_txt.text()
+        self.weapon_decay = self.decay_txt.text()
+        self.weapon_burn = int(self.ammo_burn_txt.text())
 
     def mousePressEvent(self, event):
         self.oldPos = event.globalPos()

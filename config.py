@@ -4,7 +4,7 @@ from typing import List
 
 from helpers import format_filename
 import utils.config_utils as CU
-from modules.combat import Loadout
+from modules.combat import Loadout, CustomWeapon
 
 
 CONFIG_FILENAME = format_filename("config.json")
@@ -39,6 +39,7 @@ class Config(object):
     # Combat Configuration
     loadouts: List[Loadout] = CU.ConfigValue(None)
     selected_loadout: Loadout = CU.ConfigValue(None)
+    custom_weapons: List[CustomWeapon] = CU.ConfigValue(None)
 
     # Streaming and Twitch
     streamer_layout = CU.JsonConfigValue(STREAMER_LAYOUT_DEFAULT)
@@ -53,6 +54,7 @@ class Config(object):
         # Initialize mutable options
         self.initialized = False
         self.loadouts = []
+        self.custom_weapons = []
         self.twitch_commands_enabled = ["commands", "allreturns", "toploots", "info"]
 
         self.load_config()
@@ -63,8 +65,13 @@ class Config(object):
         if not os.path.exists(CONFIG_FILENAME):
             return
 
-        with open(CONFIG_FILENAME, 'r') as f:
-            CONFIG = json.loads(f.read())
+        try:
+            with open(CONFIG_FILENAME, 'r') as f:
+                CONFIG = json.loads(f.read())
+        except:
+            config_contents = ""
+            print("Emtpy Config")
+            return
 
         if CONFIG.get("version", 1) < self.version.value:
             fn_name = "version_{}_to_{}".format(CONFIG.get("version", 1), self.version.value)
@@ -87,8 +94,13 @@ class Config(object):
     def save(self):
         if not self.initialized:
             return
-        with open(CONFIG_FILENAME, 'w') as f:
-            f.write(json.dumps(self.dump(), indent=2, sort_keys=True))
+        try:
+            to_save = json.dumps(self.dump(), indent=2, sort_keys=True)
+            with open(CONFIG_FILENAME, 'w') as f:
+                f.write(to_save)
+        except:
+            print("Error saving config!")
+
 
     def __setattr__(self, item, value):
         if not isinstance(getattr(self, item, None), CU.ConfigValue):

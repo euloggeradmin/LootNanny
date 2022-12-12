@@ -35,6 +35,7 @@ def take_screenshot(delay_ms, directory, glob: GlobalInstance):
 
 
 Loadout = namedtuple("Loadout", ["weapon", "amp", "scope", "sight_1", "sight_2", "damage_enh", "accuracy_enh"])
+CustomWeapon = namedtuple("CustomWeapon", ["weapon", "decay", "ammo_burn"])
 
 
 class HuntingTrip(object):
