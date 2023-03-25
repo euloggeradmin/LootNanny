@@ -12,13 +12,13 @@ sys.path.append(os.path.join(os.path.dirname(__file__)))
 
 from errors import log_crash
 try:
+    from helpers import resource_path
     from utils.tables import *
     from modules.combat import CombatModule
     from views.configuration import ConfigTab
     from chat import ChatReader
     from config import Config
     from version import VERSION
-    from helpers import resource_path
     from windows.streamer import StreamerWindow
     from views.twitch import TwitchTab
     from modules.combat import MarkupSingleton

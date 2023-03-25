@@ -45,7 +45,6 @@ if __name__ == "__main__":
                     continue
                 try:
                     data = dict(zip(FIELDS, line.split(";")))
-                    print(data)
                     cost = data["cost"].strip()
                     if not cost:
                         cost = "0.0"

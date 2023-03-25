@@ -41,7 +41,7 @@ class ConfigTab(QWidget):
         self.character_name.editingFinished.connect(self.onNameChanged)
 
         self.weapons = WeaponTable({"Name": [], "Amp": [], "Scope": [], "Sight 1": [],
-                         "Sight 2": [], "Damage": [], "Accuracy": []}, 25, 7)
+                         "Sight 2": [], "Damage": [], "Accuracy": [], "Economy": []}, 25, 8)
         self.weapons.itemClicked.connect(self.weapon_table_selected)
         self.redraw_weapons()
         form_inputs.addRow("Weapons", self.weapons)
@@ -109,7 +109,7 @@ class ConfigTab(QWidget):
         self.setLayout(layout)
 
         if self.app.config.selected_loadout.value:
-            self.active_loadout.setText(self.app.config.selected_loadout.value[0])
+            self.active_loadout.setText(self.app.config.selected_loadout.value.weapon)
             self.recalculateWeaponFields()
 
         if not os.path.exists(os.path.expanduser(self.screenshot_directory)):
@@ -139,7 +139,7 @@ class ConfigTab(QWidget):
 
     def select_loadout(self):
         self.app.config.selected_loadout = self.app.config.loadouts.value[self.selected_index]
-        self.active_loadout.setText(self.app.config.selected_loadout.value[0])
+        self.active_loadout.setText(self.app.config.selected_loadout.value.weapon)
         self.recalculateWeaponFields()
 
     def delete_loadout(self):
@@ -149,10 +149,10 @@ class ConfigTab(QWidget):
 
     def loadout_to_data(self):
         d = {"Name": [], "Amp": [], "Scope": [], "Sight 1": [],
-                         "Sight 2": [], "Damage": [], "Accuracy": []}
+                         "Sight 2": [], "Damage": [], "Accuracy": [], "Economy": []}
         for loadout in self.app.config.loadouts.value:
             if isinstance(loadout, list):
-                loadout = Loadout(*loadout)
+                loadout = Loadout(**dict(zip(Loadout.FIELDS, loadout)))
             loadout: Loadout
             d["Name"].append(loadout.weapon)
             d["Amp"].append(loadout.amp)
@@ -161,6 +161,7 @@ class ConfigTab(QWidget):
             d["Sight 2"].append(loadout.sight_2)
             d["Damage"].append(loadout.damage_enh)
             d["Accuracy"].append(loadout.accuracy_enh)
+            d["Economy"].append(loadout.economy_enh)
         return d
 
     def redraw_weapons(self):
@@ -190,9 +191,8 @@ class ConfigTab(QWidget):
     def create_weapon_canceled(self):
         self.create_weapon_btn.setEnabled(True)
 
-    def on_added_weapon(self, weapon: str, amp: str, scope: str, sight_1: str, sight_2: str, d_enh: int, a_enh: int):
-        print("Adding", weapon, )
-        new_loadout = Loadout(weapon, amp, scope, sight_1, sight_2, d_enh, a_enh)
+    def on_added_weapon(self, *args):
+        new_loadout = Loadout(**dict(zip(Loadout.FIELDS, args)))
         self.app.config.loadouts.value.append(new_loadout)
         self.app.config.save()
         self.redraw_weapons()
@@ -225,11 +225,15 @@ class ConfigTab(QWidget):
         self.onChatLocationChanged()
 
     def recalculateWeaponFields(self):
-        loadout = Loadout(*self.app.config.selected_loadout.value)
+        loadout = self.app.config.selected_loadout.value
+        if loadout.weapon is None:
+            return
+
         weapon = ALL_WEAPONS[loadout.weapon]
         amp = ALL_ATTACHMENTS.get(loadout.amp)
-        ammo = weapon["ammo"] * (1 + (0.1 * loadout.damage_enh))
-        decay = weapon["decay"] * Decimal(1 + (0.1 * loadout.damage_enh))
+        ammo = weapon["ammo"] * (1 + (0.1 * loadout.damage_enh)) * (1 - (0.01 * loadout.economy_enh))
+        decay = weapon["decay"] * Decimal(1 + (0.1 * loadout.damage_enh)) * Decimal(1 - (0.01 * loadout.economy_enh))
+        
         if amp:
             ammo += amp["ammo"]
             decay += amp["decay"]
@@ -292,6 +296,7 @@ class WeaponPopOut(QWidget):
         self.sight_2 = "None"
         self.damage_enhancers = 0
         self.accuracy_enhancers = 0
+        self.economy_enhancers = 0
 
         self.layout = self.create_widgets()
         self.resize_to_contents()
@@ -343,6 +348,11 @@ class WeaponPopOut(QWidget):
         self.accuracy_enhancers_txt.editingFinished.connect(self.on_field_changed)
         layout.addLayout(form_inputs)
 
+        self.economy_enhancers_txt = QLineEdit(text="0")
+        form_inputs.addRow("Economy Enhancers:", self.economy_enhancers_txt)
+        self.economy_enhancers_txt.editingFinished.connect(self.on_field_changed)
+        layout.addLayout(form_inputs)
+
         h_layout = QHBoxLayout()
 
         cancel = QPushButton("Cancel")
@@ -373,7 +383,8 @@ class WeaponPopOut(QWidget):
             self.sight_1,
             self.sight_2,
             self.damage_enhancers,
-            self.accuracy_enhancers
+            self.accuracy_enhancers,
+            self.economy_enhancers
         )
         self.close()
 
@@ -385,9 +396,11 @@ class WeaponPopOut(QWidget):
         self.amp = self.amp_option.currentText()
         self.damage_enhancers = min(10, int(self.damage_enhancers_txt.text()))
         self.accuracy_enhancers = min(10, int(self.accuracy_enhancers_txt.text()))
+        self.economy_enhancers = min(10, int(self.economy_enhancers_txt.text()))
 
         self.damage_enhancers_txt.setText(str(self.damage_enhancers))
         self.accuracy_enhancers_txt.setText(str(self.accuracy_enhancers))
+        self.economy_enhancers_txt.setText(str(self.economy_enhancers))
 
     def mousePressEvent(self, event):
         self.oldPos = event.globalPos()

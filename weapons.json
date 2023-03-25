@@ -14333,5 +14333,70 @@
     "ammo": 0,
     "decay": "0.100",
     "type": "Melee"
+  },
+  "A-3 Justifier Mk. 2, Improved, TWEN Edition": {
+    "ammo": 1350,
+    "decay": "0.00229",
+    "type": "Rifle"
+  },
+  "A-3 Justifier Mk. 2, TWEN Edition": {
+    "ammo": 900,
+    "decay": "0.00414",
+    "type": "Carbine"
+  },
+  "A&P Series Hero, Adjusted, TWEN Edition": {
+    "ammo": 900,
+    "decay": "0.00252",
+    "type": "Carbine"
+  },
+  "ArMatrix SB-10, TWEN Edition": {
+    "ammo": 442,
+    "decay": "0.00371",
+    "type": "Melee"
+  },
+  "DOA Strikehammer, Improved, TWEN Edition": {
+    "ammo": 2160,
+    "decay": "0.009",
+    "type": "Carbine"
+  },
+  "Fire Forge DAR 9300, TWEN Edition": {
+    "ammo": 1530,
+    "decay": "0.01215",
+    "type": "Rifle"
+  },
+  "Glinting Unity, TWEN Edition": {
+    "ammo": 1970,
+    "decay": "0.0099",
+    "type": "Rifle"
+  },
+  "Keyworks Unity, TWEN Edition": {
+    "ammo": 4031,
+    "decay": "0.0051",
+    "type": "Melee"
+  },
+  "Omegaton M2870, Improved, TWEN Edition": {
+    "ammo": 1260,
+    "decay": "0.0045",
+    "type": "Pistol"
+  },
+  "Ravenger Mini-Sweeper V1, Adjusted, TWEN Edition": {
+    "ammo": 1350,
+    "decay": "0.0099",
+    "type": "Rifle"
+  },
+  "Sniping Unity, TWEN Edition": {
+    "ammo": 4015,
+    "decay": "0.00666",
+    "type": "Rifle"
+  },
+  "Sollomate Opalo, TWEN Edition": {
+    "ammo": 180,
+    "decay": "0.00018",
+    "type": "Rifle"
+  },
+  "Sparking Unity, TWEN Edition": {
+    "ammo": 1397,
+    "decay": "0.0054",
+    "type": "Melee"
   }
 }

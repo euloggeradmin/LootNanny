@@ -23,7 +23,7 @@ STREAMER_LAYOUT_DEFAULT = {'layout': [
 class Config(object):
 
     # Version
-    version = CU.ConfigValue(2)
+    version = CU.ConfigValue(3)
 
     # Core Configuration
     location = CU.ConfigSecret("")
@@ -37,8 +37,8 @@ class Config(object):
     screenshot_enabled = CU.ConfigValue(True)
 
     # Combat Configuration
-    loadouts: List[Loadout] = CU.ConfigValue(None)
-    selected_loadout: Loadout = CU.ConfigValue(None)
+    loadouts: List[Loadout] = CU.ConfigValue([], type=Loadout)
+    selected_loadout: Loadout = CU.ConfigValue(None, type=Loadout)
     custom_weapons: List[CustomWeapon] = CU.ConfigValue(None)
 
     # Streaming and Twitch
@@ -78,13 +78,37 @@ class Config(object):
             CONFIG = getattr(CU, fn_name)(CONFIG)
 
         for item, value in CONFIG.items():
+
+            if item == "loadouts":
+                loadouts = []
+                for data in value:
+                    if isinstance(data, list):
+                        loadouts.append(Loadout(**dict(zip(Loadout.FIELDS, data))))
+                    else:
+                        loadouts.append(Loadout(**data))
+
+                value = loadouts
+            elif item == "selected_loadout":
+                if isinstance(data, list):
+                    value = Loadout(**dict(zip(Loadout.FIELDS, data)))
+                else:
+                    value = Loadout(**value)
+
             setattr(self, item, value)
 
     def dump(self) -> dict:
         p = {}
         for attr_name in dir(self):
             attr = getattr(self, attr_name)
-            if isinstance(attr, CU.ConfigValue):
+
+            if attr_name == "loadouts":
+                p[attr_name] = [loadout.dump() for loadout in attr.value]
+
+            elif attr_name == "selected_loadout":
+                p[attr_name] = attr.value.dump() if attr.value else {}
+
+            elif isinstance(attr, CU.ConfigValue):
+
                 p[attr_name] = attr.value
         return p
 
@@ -101,8 +125,8 @@ class Config(object):
         except:
             print("Error saving config!")
 
-
     def __setattr__(self, item, value):
+        print("Setting", item, value)
         if not isinstance(getattr(self, item, None), CU.ConfigValue):
             return super().__setattr__(item, value)
         config_item: CU.ConfigValue = getattr(self, item)

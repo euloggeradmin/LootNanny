@@ -34,7 +34,41 @@ def take_screenshot(delay_ms, directory, glob: GlobalInstance):
     im.save(screenshot_fullpath)
 
 
-Loadout = namedtuple("Loadout", ["weapon", "amp", "scope", "sight_1", "sight_2", "damage_enh", "accuracy_enh"])
+class Loadout(object):
+    FIELDS = ("weapon", "amp", "scope", "sight_1", "sight_2", "damage_enh", "accuracy_enh", "economy_enh")
+
+    def __init__(self, weapon: str = None, amp: str = None, scope: str = None, sight_1: str = None,
+                 sight_2: str = None, damage_enh: int = 0, accuracy_enh: int = 0, economy_enh: int = 0):
+        self.weapon = weapon
+        self.amp = amp
+        self.scope = scope
+        self.sight_1 = sight_1
+        self.sight_2 = sight_2
+        self.damage_enh = damage_enh
+        self.accuracy_enh = accuracy_enh
+        self.economy_enh = economy_enh
+
+    def __str__(self):
+        contents = ", ".join([f"{field}={repr(getattr(self, field))}" for field in self.FIELDS])
+        return f"Loadout({contents})"
+
+    def dump(self):
+        return {
+            "weapon": self.weapon,
+            "amp": self.amp,
+            "scope": self.scope,
+            "sight_1": self.sight_1,
+            "sight_2": self.sight_2,
+            "damage_enh": self.damage_enh,
+            "accuracy_enh": self.accuracy_enh,
+            "economy_enh": self.economy_enh
+        }
+
+    @classmethod
+    def load(cls, raw):
+        return cls(**raw)
+
+
 CustomWeapon = namedtuple("CustomWeapon", ["weapon", "decay", "ammo_burn"])
 
 
@@ -483,7 +517,6 @@ class CombatModule(BaseModule):
             else:
                 d["%"].append("%")
                 d["mu%"].append("%")
-        print(d)
         return d
 
     def create_new_run(self):

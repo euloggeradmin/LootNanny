@@ -40,7 +40,6 @@ if __name__ == "__main__":
                     }
 
                 except:
-                    print(line)
                     break
 
     if all_weapons:

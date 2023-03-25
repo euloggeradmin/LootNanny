@@ -129,7 +129,7 @@ class EnhancerTableView(BaseTableView):
 
 
 class WeaponTable(BaseTableView):
-    COLUMNS = ("Name", "Amp", "Scope", "Sight 1", "Sight 2", "Damage", "Accuracy")
+    COLUMNS = ("Name", "Amp", "Scope", "Sight 1", "Sight 2", "Damage", "Accuracy", "Economy")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -143,6 +143,7 @@ class WeaponTable(BaseTableView):
         header.setSectionResizeMode(4, QHeaderView.ResizeToContents)
         header.setSectionResizeMode(5, QHeaderView.ResizeToContents)
         header.setSectionResizeMode(6, QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(7, QHeaderView.ResizeToContents)
 
         self.setSelectionBehavior(QAbstractItemView.SelectRows)
 

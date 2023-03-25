@@ -66,3 +66,28 @@ def version_1_to_2(old_version: dict) -> dict:
     old_version["twitch_prefix"] = twitch_config.pop("prefix", "!")
 
     return old_version
+
+
+def version_2_to_3(old_version: dict) -> dict:
+    """
+    Updates from version 2 to 3
+    :param old_version:
+    :return:
+    """
+    from modules.combat import Loadout
+
+    old_version["version"] = 3
+
+    new_loadouts = []
+    print(old_version)
+    for loadout in old_version.get("loadouts", []):
+        if not loadout:
+            continue
+
+        print(loadout)
+
+    return old_version
+
+
+
+
