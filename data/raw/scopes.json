@@ -1,3 +1,5 @@
+{ "updated": "20230928T190400",
+  "data":
 {
   "Alekz Precision Scope": {
     "ammo": 0,
@@ -209,4 +211,4 @@
     "decay": "0.00014",
     "type": "Scope"
   }
-}
+}}

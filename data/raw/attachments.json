@@ -1,3 +1,5 @@
+{ "updated": "20230928T190400",
+  "data":
 {
   "ArMatrix B-Amplifier 10P (L)": {
     "ammo": 210,
@@ -1264,4 +1266,4 @@
     "decay": "0.00032",
     "type": "Energy Amp"
   }
-}
+}}
